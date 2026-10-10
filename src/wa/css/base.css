@@ -1,0 +1,78 @@
+/* Overlay drawn by the preload over WhatsApp (toolbar, pictures, status line). */
+#wm-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2147483000;
+  font: 11px Tahoma, 'Segoe UI', sans-serif;
+}
+#wm-root > *,
+#wm-bar > * {
+  pointer-events: auto;
+}
+#wm-root svg {
+  display: block;
+}
+#wm-login,
+#wm-bar,
+#wm-status,
+#wm-pic-contact,
+#wm-pic-own {
+  display: none;
+}
+#wm-root.wm-chat #wm-bar,
+#wm-root.wm-chat #wm-status,
+#wm-root.wm-chat #wm-pic-contact,
+#wm-root.wm-chat #wm-pic-own {
+  display: flex;
+}
+html[data-wm-state='login'] #wm-login {
+  display: flex;
+}
+#wm-bar {
+  position: fixed;
+  align-items: center;
+  gap: 4px;
+  left: var(--wm-footer-left);
+  width: var(--wm-footer-width);
+  top: calc(var(--wm-footer-top) - var(--wm-bar-h));
+  height: var(--wm-bar-h);
+  padding: 0 8px;
+}
+#wm-bar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: inherit;
+  cursor: default;
+}
+
+/* Skin "WhatsApp original": just a small floating nudge button. */
+html:not([data-skin]) {
+  --wm-bar-h: 0px;
+}
+#wm-bar.wm-off {
+  width: auto;
+  left: calc(var(--wm-footer-left) + var(--wm-footer-width) - 52px);
+  top: calc(var(--wm-footer-top) - 46px);
+  height: 36px;
+  padding: 0;
+}
+#wm-bar.wm-off button {
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: #202c33;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  opacity: 0.85;
+}
+#wm-bar.wm-off button:hover {
+  opacity: 1;
+}
+
+/* Reserve space for the toolbar above the composer. */
+html[data-skin] #main footer {
+  margin-top: var(--wm-reserve) !important;
+}

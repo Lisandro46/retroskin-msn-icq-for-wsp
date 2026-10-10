@@ -1,0 +1,355 @@
+/* =====================================================================
+   ICQ 2000b skin over WhatsApp Web: grey Win98, flowers, red/blue names.
+   ===================================================================== */
+html[data-skin='icq'] {
+  --wm-bar-h: 30px;
+  --wm-reserve: 30px;
+  --icq-face: #c0c0c0;
+  --icq-bevel-out: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --icq-bevel-in: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+html[data-skin='icq'] [data-wm-hide] {
+  display: none !important;
+}
+html[data-skin='icq'] #app :is(div, span, p, input, button, li, strong, em, h1, h2, h3, a, ol, label) {
+  font-family: 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, sans-serif !important;
+}
+
+/* ------------------------------------------------------------- login (QR) */
+html[data-skin='icq'][data-wm-state='login'] #app {
+  background: #008080 !important;
+}
+html[data-skin='icq'][data-wm-state='login'] #app div:has([data-wm-role='login-card']) {
+  background: transparent !important;
+}
+html[data-skin='icq'] [data-wm-role='login-card'] {
+  margin-top: 72px !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: var(--icq-face) !important;
+  box-shadow: var(--icq-bevel-out), 4px 4px 0 rgba(0, 0, 0, 0.4) !important;
+}
+html[data-skin='icq'] [data-wm-role='login-card'] * {
+  border-radius: 0 !important;
+}
+html[data-skin='icq'] #wm-login {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: 90vw;
+  padding: 6px 14px 6px 8px;
+  color: #000;
+  background: var(--icq-face);
+  box-shadow: var(--icq-bevel-out);
+  font-family: 'Microsoft Sans Serif', Tahoma, sans-serif;
+}
+html[data-skin='icq'] #wm-login .wm-logo {
+  animation: wm-icq-spin 4s linear infinite;
+}
+html[data-skin='icq'] #wm-login b {
+  display: block;
+  font-size: 13px;
+  color: #000080;
+}
+@keyframes wm-icq-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------------------- toolbar */
+html[data-skin='icq'] #wm-bar {
+  background: var(--icq-face);
+  box-shadow: inset 0 1px #fff, inset 0 -1px #808080;
+  font-family: 'Microsoft Sans Serif', Tahoma, sans-serif;
+}
+html[data-skin='icq'] #wm-bar button {
+  height: 23px;
+  padding: 0 8px;
+  border: 0;
+  background: linear-gradient(180deg, #fff3a0, #f7d732 60%, #e3b800);
+  box-shadow: var(--icq-bevel-out);
+  font-weight: bold;
+  color: #000;
+}
+html[data-skin='icq'] #wm-bar button:active {
+  box-shadow: var(--icq-bevel-in);
+}
+html[data-skin='icq'] #wm-status {
+  flex: 1;
+  justify-content: flex-end;
+  color: #000080;
+  white-space: nowrap;
+  overflow: hidden;
+}
+html[data-skin='icq'] #wm-send {
+  min-width: 70px;
+  background: var(--icq-face) !important;
+  font-weight: normal !important;
+}
+
+/* =================================================================== app */
+html[data-skin='icq'] [data-testid='wa-web-main-screen'],
+html[data-skin='icq'] [data-testid='wa-web-main-screen'] > div {
+  background-color: var(--icq-face) !important;
+}
+html[data-skin='icq'] #side,
+html[data-skin='icq'] #side > div,
+html[data-skin='icq'] #pane-side {
+  background-color: #fff !important;
+}
+html[data-skin='icq'] #side {
+  box-shadow: var(--icq-bevel-in);
+}
+
+/* Left rail: a grey toolbar */
+html[data-skin='icq'] header[data-testid='chatlist-header']:has([data-testid='navbar-primary-section']) {
+  background: var(--icq-face) !important;
+  box-shadow: var(--icq-bevel-out);
+}
+html[data-skin='icq'] [data-navbar-item-index] {
+  border-radius: 0 !important;
+  color: #000 !important;
+}
+html[data-skin='icq'] [data-navbar-item-index]:hover {
+  background: var(--icq-face) !important;
+  box-shadow: var(--icq-bevel-out) !important;
+}
+
+/* Title: "ICQ" contact list */
+html[data-skin='icq'] header[data-testid='chatlist-header']:has([data-testid='wa-wordmark']) {
+  background: var(--icq-face) !important;
+  box-shadow: inset 0 -1px #808080;
+}
+html[data-skin='icq'] header [data-testid='wa-wordmark'] {
+  display: none !important;
+}
+html[data-skin='icq'] header[data-testid='chatlist-header'] h2::before {
+  content: 'Contact List';
+  font: bold 14px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  color: #000;
+  padding-left: 24px;
+  background: var(--wm-icq-online) left center / 20px no-repeat;
+}
+html[data-skin='icq'] header[data-testid='chatlist-header'] button {
+  color: #000 !important;
+  border-radius: 0 !important;
+}
+html[data-skin='icq'] header[data-testid='chatlist-header'] button > * {
+  background: var(--icq-face) !important;
+  box-shadow: var(--icq-bevel-out) !important;
+  border-radius: 0 !important;
+  color: #000 !important;
+}
+
+/* Search */
+html[data-skin='icq'] [data-testid='chat-list-search-container'] > div {
+  background: #fff !important;
+  border-radius: 0 !important;
+  box-shadow: var(--icq-bevel-in) !important;
+  border: 0 !important;
+}
+
+/* Filter chips: Win98 push buttons */
+html[data-skin='icq'] #side [role='tablist'] button {
+  border-radius: 0 !important;
+  border: 0 !important;
+  background: var(--icq-face) !important;
+  box-shadow: var(--icq-bevel-out) !important;
+  color: #000 !important;
+}
+html[data-skin='icq'] #side [role='tablist'] button * {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+html[data-skin='icq'] #side [role='tablist'] button[aria-selected='true'] {
+  box-shadow: var(--icq-bevel-in) !important;
+  background: #dfdfdf !important;
+  font-weight: bold !important;
+}
+
+/* Contact rows: flowers, Online group */
+html[data-skin='icq'] [data-testid='chat-list']::before {
+  content: 'Online';
+  display: block;
+  padding: 4px 10px 2px;
+  font: bold 13px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  color: #0000c0;
+}
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-container'] {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+html[data-skin='icq'] #pane-side [role='row']:has([aria-selected='true']) [data-testid='cell-frame-container'] {
+  background: #000080 !important;
+}
+html[data-skin='icq'] #pane-side [role='row']:has([aria-selected='true']) [data-testid='cell-frame-container'] * {
+  color: #fff !important;
+}
+html[data-skin='icq'] [data-wm-role='avatar'] {
+  background: var(--wm-icq-online) center / 26px no-repeat !important;
+}
+html[data-skin='icq'] [data-wm-row='group'] [data-wm-role='avatar'] {
+  background-image: var(--wm-icq-group) !important;
+}
+/* A message is waiting: the blinking yellow note */
+html[data-skin='icq'] [data-wm-unread='1'] [data-wm-role='avatar'] {
+  background-image: var(--wm-icq-note) !important;
+  animation: wm-icq-blink 0.8s steps(2) infinite;
+}
+@keyframes wm-icq-blink {
+  50% { opacity: 0.2; }
+}
+html[data-skin='icq'] [data-wm-role='avatar'] > * {
+  opacity: 0 !important;
+}
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-title'] span[title] {
+  color: #000 !important;
+}
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-secondary'],
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-secondary'] span,
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-primary-detail'] span {
+  color: #808080 !important;
+}
+html[data-skin='icq'] [data-testid='icon-unread-count'] {
+  background: #c00000 !important;
+  color: #fff !important;
+  border-radius: 0 !important;
+}
+
+/* ========================================================= conversation */
+html[data-skin='icq'] #main {
+  background: var(--icq-face) !important;
+}
+html[data-skin='icq'] #main [data-testid^='conversation-background'] {
+  background: #fff !important;
+}
+html[data-skin='icq'] #main [data-testid^='conversation-background'] > * {
+  display: none !important;
+}
+html[data-skin='icq'] [data-testid='conversation-panel-body'] {
+  box-shadow: var(--icq-bevel-in);
+  margin: 0 4px;
+}
+html[data-skin='icq'] [data-testid='conversation-header'] {
+  background: var(--icq-face) !important;
+  box-shadow: inset 0 -1px #808080;
+}
+html[data-skin='icq'] [data-testid='conversation-header'] img {
+  border-radius: 0 !important;
+}
+html[data-skin='icq'] [data-testid='conversation-info-header-chat-title']::before {
+  content: 'Message Session - ';
+  font-weight: normal;
+  color: #444;
+}
+html[data-skin='icq'] [data-testid='conversation-info-header-chat-title'] {
+  font-weight: bold !important;
+  color: #000 !important;
+}
+html[data-skin='icq'] [data-testid='conversation-header'] button {
+  color: #000 !important;
+}
+
+/* Messages: no bubbles; "Juan (19:05):" in red, mine in blue */
+html[data-skin='icq'] [data-wm-msg] [data-testid^='tail-'] {
+  display: none !important;
+}
+html[data-skin='icq'] [data-wm-msg] div:has(> [data-testid='msg-container']) {
+  align-items: flex-start !important;
+}
+html[data-skin='icq'] #main:not([data-wm-group='1']) [data-wm-msg] div:has(> [data-testid='msg-container']) {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+html[data-skin='icq'] [data-wm-msg] [data-testid='msg-container'],
+html[data-skin='icq'] [data-wm-msg] [data-testid='msg-container'] > div {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+html[data-skin='icq'] [data-wm-msg] [data-testid='msg-container'] {
+  max-width: 100% !important;
+}
+html[data-skin='icq'] [data-wm-msg] [data-testid='selectable-text'] {
+  color: #000 !important;
+}
+html[data-skin='icq'] [data-wm-msg] [data-testid='msg-meta'] {
+  display: none !important;
+}
+html[data-skin='icq'] [data-wm-first='1']::before,
+html[data-skin='icq'] [data-wm-msg]:not([data-wm-first='1'])::before {
+  content: attr(data-wm-sender) ' (' attr(data-wm-time) '):';
+  display: block;
+  margin: 6px 0 0 10px;
+  color: #c00000;
+  font: bold 13px 'Microsoft Sans Serif', Tahoma, sans-serif;
+}
+html[data-skin='icq'] [data-wm-msg='out']::before {
+  color: #0000c0 !important;
+}
+html[data-skin='icq'] [data-wm-msg]:has([data-testid='author'])::before {
+  display: none !important;
+}
+html[data-skin='icq'] [data-wm-msg] [data-testid='author'] {
+  color: #c00000 !important;
+  font-weight: bold !important;
+}
+html[data-skin='icq'] [data-wm-system] * {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #808080 !important;
+  border-radius: 0 !important;
+}
+
+/* Zumbido */
+html[data-skin='icq'] [data-wm-nudge='1']::before,
+html[data-skin='icq'] [data-wm-nudge='1'] > * {
+  display: none !important;
+}
+html[data-skin='icq'] [data-wm-nudge='1']::after {
+  content: '*** ' attr(data-wm-sender) ' sent you a Zumbido! ***';
+  display: block;
+  margin: 8px 10px;
+  color: #c00000;
+  font: bold 13px 'Microsoft Sans Serif', Tahoma, sans-serif;
+}
+html[data-skin='icq'] [data-wm-nudge='1'][data-wm-msg='out']::after {
+  content: '*** You sent a Zumbido! ***';
+  color: #0000c0;
+}
+
+/* Composer: sunken white box */
+html[data-skin='icq'] #main footer,
+html[data-skin='icq'] #main footer > div {
+  background: var(--icq-face) !important;
+}
+html[data-skin='icq'] [data-testid='compose-box'] > span > div > div > div {
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: var(--icq-bevel-in) !important;
+}
+
+/* Right pane when no chat is open */
+html[data-skin='icq'] [data-testid='wa-web-main-screen'] :is(button, [role='button']) {
+  border-radius: 0 !important;
+}
+
+/* Win98 scrollbars */
+html[data-skin='icq'] ::-webkit-scrollbar {
+  width: 16px !important;
+  height: 16px !important;
+}
+html[data-skin='icq'] ::-webkit-scrollbar-track {
+  background: repeating-conic-gradient(#c0c0c0 0 25%, #fff 0 50%) 0 0 / 2px 2px !important;
+}
+html[data-skin='icq'] ::-webkit-scrollbar-thumb {
+  background: var(--icq-face) !important;
+  box-shadow: var(--icq-bevel-out) !important;
+  border-radius: 0 !important;
+}

@@ -1,0 +1,97 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  cursor: pointer;
+}
+#toast {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: rise 0.35s ease-out;
+}
+@keyframes rise {
+  from { transform: translateY(100%); }
+}
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+.bar i {
+  margin-left: auto;
+  font-style: normal;
+}
+.body {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  overflow: hidden;
+}
+.body p {
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+.logo {
+  flex: none;
+  display: flex;
+}
+
+/* MSN: light blue with the blue strip on top */
+body[data-skin='msn'] {
+  font: 11px Tahoma, sans-serif;
+  background: linear-gradient(180deg, #fff, #c6dbf7);
+  border: 1px solid #5b87cf;
+  box-sizing: border-box;
+}
+body[data-skin='msn'] .bar {
+  height: 18px;
+  padding: 0 6px;
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(180deg, #4c8fe9, #1e5bc6);
+}
+body[data-skin='msn'] .body p {
+  color: #1d2d4d;
+}
+body[data-skin='msn'] .foot {
+  text-align: right;
+  padding: 0 6px 4px;
+  color: #1d4f9e;
+  text-decoration: underline;
+}
+
+/* ICQ: Win98 grey box */
+body[data-skin='icq'] {
+  font: 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  background: #c0c0c0;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  padding: 3px;
+  box-sizing: border-box;
+}
+body[data-skin='icq'] .bar {
+  height: 18px;
+  padding: 0 4px;
+  color: #fff;
+  font-weight: bold;
+  background: linear-gradient(90deg, #000080, #1084d0);
+}
+body[data-skin='icq'] .body {
+  background: #ffffe1;
+  margin-top: 3px;
+  box-shadow: inset 1px 1px #808080, inset -1px -1px #fff;
+}
+body[data-skin='icq'] em {
+  color: #c00000;
+  font-style: normal;
+  font-weight: bold;
+}

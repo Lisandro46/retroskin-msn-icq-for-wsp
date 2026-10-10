@@ -1,0 +1,56 @@
+{
+  "name": "retro-messenger-whatsapp",
+  "version": "0.1.0",
+  "description": "WhatsApp Web vestido de MSN Messenger 7.5 o ICQ 2000b (solo estético)",
+  "main": "out/main/index.js",
+  "author": "Lisandro Arrigoni",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "npm run typecheck && electron-vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
+    "dist": "npm run build && electron-builder --win --publish never"
+  },
+  "build": {
+    "appId": "com.lisandro.retro-messenger",
+    "productName": "Retro Messenger para WhatsApp",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "out/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "Retro-Messenger-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Retro-Messenger-Portable-${version}.${ext}"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.0"
+  },
+  "homepage": "https://github.com/Lisandro46/retroskin-msn-icq-for-wsp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lisandro46/retroskin-msn-icq-for-wsp.git"
+  }
+}

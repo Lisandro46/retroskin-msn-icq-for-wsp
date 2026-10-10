@@ -1,0 +1,203 @@
+/* ICQ 2000b on Windows 98: grey 3D bevels, navy title bar, yellow buttons. */
+body[data-skin='icq'] {
+  --bg: #c0c0c0;
+  --face: #c0c0c0;
+  --bevel-out: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+  --bevel-in: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+  font: 11px 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, sans-serif;
+  color: #000;
+}
+body[data-skin='icq'] .window {
+  background: var(--face);
+  box-shadow: var(--bevel-out);
+  padding: 3px;
+}
+body[data-skin='icq'] .titlebar {
+  height: 20px;
+  padding: 0 2px 0 3px;
+  gap: 3px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #fff;
+  font-weight: bold;
+}
+body[data-skin='icq'] .tbtns {
+  gap: 0;
+}
+body[data-skin='icq'] .tbtns button {
+  width: 16px;
+  height: 14px;
+  border: 0;
+  background: var(--face);
+  box-shadow: var(--bevel-out);
+  color: #000;
+}
+body[data-skin='icq'] .tbtns button.close {
+  margin-left: 2px;
+}
+body[data-skin='icq'] .tbtns button:active {
+  box-shadow: var(--bevel-in);
+}
+body[data-skin='icq'] .g-min {
+  width: 6px;
+  height: 2px;
+  bottom: 3px !important;
+}
+body[data-skin='icq'] .g-max {
+  width: 9px;
+  height: 8px;
+  border-top-width: 2px;
+}
+body[data-skin='icq'] .g-close {
+  width: 8px;
+  height: 7px;
+}
+body[data-skin='icq'] .g-close::before,
+body[data-skin='icq'] .g-close::after {
+  left: 3px;
+  top: -1px;
+  height: 9px;
+  width: 2px;
+}
+
+/* Header: flower, ICQ#, nick, toolbar */
+body[data-skin='icq'] .icq-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px 4px;
+}
+body[data-skin='icq'] .icq-logo {
+  display: flex;
+  animation: icq-spin 8s linear infinite;
+}
+@keyframes icq-spin {
+  to { transform: rotate(360deg); }
+}
+body[data-skin='icq'] .icq-ids {
+  flex: 1;
+  min-width: 0;
+  line-height: 15px;
+}
+body[data-skin='icq'] .icq-uin {
+  font-weight: bold;
+  color: #000080;
+}
+body[data-skin='icq'] .icq-nick {
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body[data-skin='icq'] [data-edit] {
+  padding: 0 2px;
+}
+body[data-skin='icq'] [data-edit]:hover,
+body[data-skin='icq'] [data-edit]:focus {
+  background: #fff;
+  box-shadow: var(--bevel-in);
+}
+body[data-skin='icq'] .icq-tools {
+  display: flex;
+  gap: 4px;
+}
+body[data-skin='icq'] .btn98,
+body[data-skin='icq'] .dialog .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 23px;
+  padding: 0 8px;
+  border: 0;
+  background: var(--face);
+  box-shadow: var(--bevel-out);
+}
+body[data-skin='icq'] .btn98:active,
+body[data-skin='icq'] .dialog .btn:active {
+  box-shadow: var(--bevel-in);
+}
+body[data-skin='icq'] .btn98:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+/* Fake tabs (All / Online, Users / Groups) */
+body[data-skin='icq'] .icq-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 4px;
+  margin-top: 2px;
+}
+body[data-skin='icq'] .icq-tabs span {
+  padding: 2px 10px 3px;
+  background: var(--face);
+  box-shadow: inset 1px 1px #fff, inset -1px 0 #0a0a0a, inset -2px 0 #808080;
+  border-radius: 3px 3px 0 0;
+  color: #444;
+}
+body[data-skin='icq'] .icq-tabs span.on {
+  color: #000;
+  font-weight: bold;
+  transform: translateY(1px);
+}
+body[data-skin='icq'] .icq-tabs .sep {
+  flex: 1;
+  box-shadow: none;
+  background: none;
+}
+
+body[data-skin='icq'] #content {
+  margin: 0 4px;
+  background: #fff;
+  box-shadow: var(--bevel-in);
+  border: 2px solid transparent;
+}
+body[data-skin='icq'] .loading {
+  background: #fff;
+  font-weight: bold;
+  color: #000080;
+}
+body[data-skin='icq'] .loading .blink {
+  animation: icq-blink 0.8s steps(2) infinite;
+}
+@keyframes icq-blink {
+  50% { opacity: 0.25; }
+}
+
+/* Bottom: Main / Services / status */
+body[data-skin='icq'] .icq-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 5px 4px 2px;
+}
+body[data-skin='icq'] .icq-row {
+  display: flex;
+  gap: 3px;
+}
+body[data-skin='icq'] .icq-yellow {
+  flex: 1;
+  font-weight: bold;
+  background: linear-gradient(180deg, #fff3a0, #f7d732 60%, #e3b800);
+}
+body[data-skin='icq'] .icq-sysnotice {
+  flex: none;
+  width: 28px;
+  padding: 0;
+}
+body[data-skin='icq'] .icq-statusbtn {
+  justify-content: flex-start;
+  font-weight: bold;
+}
+
+/* Dialogs */
+body[data-skin='icq'] .dialog {
+  background: var(--face);
+  box-shadow: var(--bevel-out), 4px 4px 0 rgba(0, 0, 0, 0.35);
+  padding: 3px;
+}
+body[data-skin='icq'] .dialog input {
+  border: 0;
+  box-shadow: var(--bevel-in);
+  padding: 4px 5px;
+}

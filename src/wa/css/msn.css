@@ -1,0 +1,382 @@
+/* =====================================================================
+   MSN Messenger 7.5 skin over WhatsApp Web.
+   Hooks: ids, roles, data-testid and our own data-wm-* marks only.
+   ===================================================================== */
+html[data-skin='msn'] {
+  --wm-bar-h: 30px;
+  --wm-reserve: 50px;
+  --msn-blue: #1d4f9e;
+  --msn-line: #9ab3dc;
+  --msn-light: #e9f2fd;
+}
+html[data-skin='msn'] [data-wm-hide] {
+  display: none !important;
+}
+html[data-skin='msn'] #app :is(div, span, p, input, button, li, strong, em, h1, h2, h3, a, ol, label) {
+  font-family: Tahoma, 'Segoe UI', sans-serif !important;
+}
+
+/* ------------------------------------------------------------- login (QR) */
+html[data-skin='msn'][data-wm-state='login'] #app {
+  background: linear-gradient(180deg, #fff 0%, #e4eefb 55%, #c7daf5 100%) !important;
+}
+html[data-skin='msn'][data-wm-state='login'] #app div:has([data-wm-role='login-card']) {
+  background: transparent !important;
+}
+html[data-skin='msn'] [data-wm-role='login-card'] {
+  margin-top: 72px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--msn-line) !important;
+  background: #fff !important;
+  box-shadow: 0 2px 8px rgba(29, 79, 158, 0.18) !important;
+}
+html[data-skin='msn'] [data-wm-role='login-card'] * {
+  border-radius: 0 !important;
+}
+html[data-skin='msn'] #wm-login {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: 90vw;
+  padding: 8px 16px 8px 10px;
+  color: var(--msn-blue);
+  background: linear-gradient(180deg, #fafdff, #dbe8fa);
+  border: 1px solid var(--msn-line);
+  border-radius: 6px;
+}
+html[data-skin='msn'] #wm-login .wm-logo {
+  animation: wm-msn-spin 2.4s linear infinite;
+}
+html[data-skin='msn'] #wm-login b {
+  display: block;
+  font-size: 15px;
+}
+@keyframes wm-msn-spin {
+  from { transform: rotateY(0); }
+  to { transform: rotateY(360deg); }
+}
+
+/* ------------------------------------------------------- toolbar & status */
+html[data-skin='msn'] #wm-status {
+  position: fixed;
+  left: var(--wm-footer-left);
+  width: var(--wm-footer-width);
+  top: calc(var(--wm-footer-top) - var(--wm-reserve));
+  height: calc(var(--wm-reserve) - var(--wm-bar-h));
+  align-items: center;
+  padding: 0 10px;
+  color: #6d6d6d;
+  background: #fff;
+  border-top: 1px solid #e3e9f3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html[data-skin='msn'] #wm-bar {
+  background: linear-gradient(180deg, #f4f8fe, #d9e6f8);
+  border-top: 1px solid var(--msn-line);
+  border-bottom: 1px solid var(--msn-line);
+}
+html[data-skin='msn'] #wm-bar button {
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: none;
+  color: #000;
+}
+html[data-skin='msn'] #wm-bar button:hover {
+  border-color: #7fa1d8;
+  background: linear-gradient(180deg, #fff, #e3edfb);
+}
+html[data-skin='msn'] #wm-bar button b {
+  font-family: 'Times New Roman', serif;
+  font-size: 14px;
+}
+html[data-skin='msn'] #wm-nudge {
+  font-weight: bold;
+}
+html[data-skin='msn'] .wm-caret {
+  font-size: 9px;
+}
+
+/* ------------------------------------------------- display pictures (right) */
+html[data-skin='msn'] #main {
+  padding-right: 118px !important;
+  background: #fff !important;
+}
+html[data-skin='msn'] #wm-pic-contact,
+html[data-skin='msn'] #wm-pic-own {
+  position: fixed;
+  left: calc(var(--wm-main-left) + var(--wm-main-width) - 110px);
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  padding: 3px;
+  background: #fff;
+  border: 1px solid #7fa1d8;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 40, 120, 0.25);
+}
+html[data-skin='msn'] #wm-pic-contact {
+  top: calc(var(--wm-header-bottom) + 10px);
+}
+html[data-skin='msn'] #wm-pic-own {
+  top: calc(var(--wm-main-bottom) - 110px);
+}
+html[data-skin='msn'] #wm-bar .wm-grow {
+  flex: 1;
+}
+html[data-skin='msn'] #wm-send {
+  height: 24px !important;
+  padding: 0 16px !important;
+  border: 1px solid #5b87cf !important;
+  border-radius: 3px !important;
+  background: linear-gradient(180deg, #fff, #dce8fa 50%, #c3d7f5 51%, #e3eefc) !important;
+  font-weight: bold;
+}
+
+/* =================================================================== app */
+html[data-skin='msn'] [data-testid='wa-web-main-screen'],
+html[data-skin='msn'] [data-testid='wa-web-main-screen'] > div,
+html[data-skin='msn'] #side,
+html[data-skin='msn'] #side > div {
+  background-color: #fff !important;
+}
+
+/* Left rail (Chats / Status / ...): the tab strip of MSN */
+html[data-skin='msn'] header[data-testid='chatlist-header']:has([data-testid='navbar-primary-section']) {
+  background: linear-gradient(90deg, #c9dcf6, #e9f2fd) !important;
+  border-right: 1px solid var(--msn-line) !important;
+}
+html[data-skin='msn'] [data-navbar-item-index] {
+  border-radius: 4px !important;
+  color: var(--msn-blue) !important;
+}
+
+/* Chat list title: the WhatsApp wordmark becomes the contact-list heading */
+html[data-skin='msn'] header[data-testid='chatlist-header']:has([data-testid='wa-wordmark']) {
+  background: linear-gradient(180deg, #f4f8fe, #dce8fa) !important;
+  border-bottom: 1px solid var(--msn-line) !important;
+}
+html[data-skin='msn'] header [data-testid='wa-wordmark'] {
+  display: none !important;
+}
+html[data-skin='msn'] header[data-testid='chatlist-header'] h2::before {
+  content: 'Contactos';
+  font: bold 15px Tahoma, sans-serif;
+  color: var(--msn-blue);
+  padding-left: 26px;
+  background: var(--wm-msn-logo) left center / 22px no-repeat;
+}
+html[data-skin='msn'] header[data-testid='chatlist-header'] button {
+  color: var(--msn-blue) !important;
+}
+
+/* Search box */
+html[data-skin='msn'] [data-testid='chat-list-search-container'] > div {
+  background: #fff !important;
+  border: 1px solid var(--msn-line) !important;
+  border-radius: 3px !important;
+}
+html[data-skin='msn'] [data-testid='chat-list-search-container'] input {
+  font-style: italic;
+}
+
+/* Filter chips: small Messenger tabs */
+html[data-skin='msn'] #side [role='tablist'] button {
+  border-radius: 3px !important;
+  border: 1px solid var(--msn-line) !important;
+  background: linear-gradient(180deg, #fff, #e3edfb) !important;
+  color: #000 !important;
+  box-shadow: none !important;
+}
+html[data-skin='msn'] #side [role='tablist'] button * {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+html[data-skin='msn'] #side [role='tablist'] button[aria-selected='true'] {
+  background: linear-gradient(180deg, #4c8fe9, #1e5bc6) !important;
+  border-color: #1e5bc6 !important;
+  color: #fff !important;
+}
+
+/* Contact rows */
+html[data-skin='msn'] [data-testid='chat-list']::before {
+  content: '\25BE  Conectado';
+  display: block;
+  padding: 6px 12px 2px;
+  font: bold 13px Tahoma, sans-serif;
+  color: var(--msn-blue);
+}
+html[data-skin='msn'] #pane-side [data-testid='cell-frame-container'] {
+  background: transparent !important;
+}
+html[data-skin='msn'] #pane-side [role='row']:hover [data-testid='cell-frame-container'] {
+  background: #eef4fd !important;
+}
+html[data-skin='msn'] #pane-side [role='row']:has([aria-selected='true']) [data-testid='cell-frame-container'] {
+  background: #c9dcf6 !important;
+  box-shadow: inset 0 0 0 1px #7fa1d8;
+}
+html[data-skin='msn'] [data-wm-role='avatar'] {
+  background: var(--wm-msn-buddy) center / 30px no-repeat !important;
+}
+html[data-skin='msn'] [data-wm-row='group'] [data-wm-role='avatar'] {
+  background-image: var(--wm-msn-group) !important;
+}
+html[data-skin='msn'] [data-wm-role='avatar'] > * {
+  opacity: 0 !important;
+}
+html[data-skin='msn'] #pane-side [data-testid='cell-frame-title'] span[title] {
+  color: #000 !important;
+}
+html[data-skin='msn'] [data-wm-unread='1'] [data-testid='cell-frame-title'] span[title] {
+  font-weight: bold !important;
+}
+html[data-skin='msn'] #pane-side [data-testid='cell-frame-secondary'],
+html[data-skin='msn'] #pane-side [data-testid='cell-frame-secondary'] span {
+  color: #6d7f9c !important;
+}
+html[data-skin='msn'] [data-testid='icon-unread-count'] {
+  background: linear-gradient(180deg, #ffd56b, #ff9b1a) !important;
+  color: #5a2a00 !important;
+  box-shadow: inset 0 0 0 1px #c56b00;
+  animation: wm-msn-flash 1s steps(2) infinite;
+}
+@keyframes wm-msn-flash {
+  50% { filter: brightness(1.3); }
+}
+
+/* ========================================================= conversation */
+html[data-skin='msn'] #main [data-testid^='conversation-background'] {
+  background: #fff !important;
+}
+html[data-skin='msn'] #main [data-testid^='conversation-background'] > * {
+  display: none !important;
+}
+html[data-skin='msn'] [data-testid='conversation-header'] {
+  background: linear-gradient(180deg, #f4f8fe, #dce8fa) !important;
+  border-bottom: 1px solid var(--msn-line) !important;
+}
+/* The contact's picture moves to the right column, like Messenger. */
+html[data-skin='msn'] [data-testid='conversation-header'] > div:first-child > [role='button']:not([data-testid]) {
+  display: none !important;
+}
+html[data-skin='msn'] [data-testid='conversation-info-header-chat-title']::before {
+  content: 'Para: ';
+  font-weight: normal;
+  color: #555;
+}
+html[data-skin='msn'] [data-testid='conversation-info-header-chat-title'] {
+  font-weight: bold !important;
+  color: #000 !important;
+}
+html[data-skin='msn'] [data-testid='conversation-header'] button {
+  color: var(--msn-blue) !important;
+}
+
+/* Messages: no bubbles, everything on the left, "Juan dice:" headers. */
+html[data-skin='msn'] [data-wm-msg] [data-testid^='tail-'] {
+  display: none !important;
+}
+html[data-skin='msn'] [data-wm-msg] div:has(> [data-testid='msg-container']) {
+  align-items: flex-start !important;
+}
+html[data-skin='msn'] #main:not([data-wm-group='1']) [data-wm-msg] div:has(> [data-testid='msg-container']) {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+html[data-skin='msn'] [data-wm-msg] [data-testid='msg-container'],
+html[data-skin='msn'] [data-wm-msg] [data-testid='msg-container'] > div {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+html[data-skin='msn'] [data-wm-msg] [data-testid='msg-container'] {
+  padding-left: 14px !important;
+  max-width: 100% !important;
+}
+html[data-skin='msn'] [data-wm-msg] [data-testid='selectable-text'] {
+  color: #000 !important;
+}
+html[data-skin='msn'] [data-wm-msg] [data-testid='msg-meta'] {
+  opacity: 0.6;
+}
+html[data-skin='msn'] [data-wm-first='1']::before {
+  content: attr(data-wm-sender) ' dice:';
+  display: block;
+  margin: 10px 0 1px 12px;
+  color: #6d6d6d;
+  font: 13px Tahoma, sans-serif;
+}
+/* Groups: WhatsApp already prints the author (next to their picture). */
+html[data-skin='msn'] [data-wm-msg]:has([data-testid='author'])::before {
+  display: none !important;
+}
+html[data-skin='msn'] [data-wm-msg] [data-testid='author'] {
+  color: #6d6d6d !important;
+  font-weight: normal !important;
+}
+html[data-skin='msn'] [data-wm-msg] span[data-testid='author'] > span[data-testid='author']::after,
+html[data-skin='msn'] [data-wm-msg] [data-testid='author']:not(:has([data-testid='author']))::after {
+  content: ' dice:';
+}
+/* Date separators and system notices: plain grey text */
+html[data-skin='msn'] [data-wm-system] * {
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #8a8a8a !important;
+}
+
+/* Zumbido: shown as Messenger's system line */
+html[data-skin='msn'] [data-wm-nudge='1']::before,
+html[data-skin='msn'] [data-wm-nudge='1'] > * {
+  display: none !important;
+}
+html[data-skin='msn'] [data-wm-nudge='1']::after {
+  content: attr(data-wm-sender) ' te ha enviado un zumbido.';
+  display: block;
+  margin: 10px 12px;
+  padding: 6px 0 6px 24px;
+  border-top: 1px dotted #9ab3dc;
+  border-bottom: 1px dotted #9ab3dc;
+  color: #444;
+  font: 13px Tahoma, sans-serif;
+  background: var(--wm-nudge) 2px center / 16px no-repeat;
+}
+html[data-skin='msn'] [data-wm-nudge='1'][data-wm-msg='out']::after {
+  content: 'Has enviado un zumbido.';
+}
+
+/* Composer */
+html[data-skin='msn'] #main footer,
+html[data-skin='msn'] #main footer > div {
+  background: #fff !important;
+}
+html[data-skin='msn'] [data-testid='compose-box'] > span > div > div > div {
+  background: #fff !important;
+  border: 1px solid var(--msn-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* XP-style scrollbars */
+html[data-skin='msn'] ::-webkit-scrollbar {
+  width: 16px !important;
+  height: 16px !important;
+}
+html[data-skin='msn'] ::-webkit-scrollbar-track {
+  background: #f4f7fd !important;
+}
+html[data-skin='msn'] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #c8d9f8, #b6cdf6 50%, #a9c3f1) !important;
+  border: 1px solid #8da9de !important;
+  border-radius: 3px !important;
+}
