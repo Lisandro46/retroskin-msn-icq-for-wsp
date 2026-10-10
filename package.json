@@ -1,6 +1,6 @@
 {
   "name": "retro-messenger-whatsapp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WhatsApp Web vestido de MSN Messenger 7.5 o ICQ 2000b (solo estético)",
   "main": "out/main/index.js",
   "author": "Lisandro Arrigoni",
@@ -30,14 +30,16 @@
       ]
     },
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "artifactName": "Retro-Messenger-Setup-${version}.${ext}"
+      "shortcutName": "Retro Messenger",
+      "artifactName": "Retro-Messenger-Setup.${ext}"
     },
     "portable": {
-      "artifactName": "Retro-Messenger-Portable-${version}.${ext}"
+      "artifactName": "Retro-Messenger-Portable.${ext}"
     }
   },
   "devDependencies": {

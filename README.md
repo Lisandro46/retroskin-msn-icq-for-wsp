@@ -4,6 +4,19 @@
 
 > Proyecto de fan, gratis y de código abierto. **Todo es estético**: WhatsApp funciona exactamente igual que en el navegador. No está afiliado a WhatsApp, Meta, Microsoft ni ICQ. Los íconos y sonidos son imitaciones hechas a mano; no se incluye material original.
 
+## Descargar e instalar (1 minuto)
+
+### ⬇️ [Descargar el instalador para Windows](https://github.com/Lisandro46/retroskin-msn-icq-for-wsp/releases/latest/download/Retro-Messenger-Setup.exe)
+
+1. Abrí el archivo que se descargó. Se instala solo, sin preguntas ni permisos de administrador, y crea un acceso directo en el escritorio.
+2. Si Windows muestra **"Windows protegió su PC"**, tocá **Más información → Ejecutar de todas formas**. Aparece porque la app no está firmada: un certificado cuesta cientos de dólares por año. El código es público y el instalador lo arma GitHub directamente desde este repo.
+3. Se abre Messenger con un código QR. En tu teléfono: **WhatsApp → ⋮ / Configuración → Dispositivos vinculados → Vincular un dispositivo**, y escaneá el código.
+4. ¡Listo! La sesión queda guardada. Para cambiar entre MSN e ICQ: **Herramientas → Skin** (en ICQ: **Main → Change Skin**).
+
+¿No querés instalar nada? Bajate la [versión portable](https://github.com/Lisandro46/retroskin-msn-icq-for-wsp/releases/latest/download/Retro-Messenger-Portable.exe): la abrís y listo.
+
+Requisitos: Windows 10 u 11 (64 bits) y WhatsApp en tu teléfono. Para desinstalar: **Configuración de Windows → Aplicaciones → Retro Messenger para WhatsApp → Desinstalar**.
+
 ## Qué tiene
 
 | | MSN Messenger 7.5 | ICQ 2000b |
@@ -25,10 +38,7 @@ El botón **Zumbido** (o **Ctrl+G**) manda el texto `*ZUMBIDO*`, que WhatsApp mu
 
 **Herramientas → Carpeta de sonidos…** (en ICQ: **Main → Preferences → Sounds folder…**) abre `%APPDATA%\retro-messenger-whatsapp\sounds`. Si ponés ahí `msn\message.wav`, `msn\nudge.wav`, `msn\online.wav`, `icq\message.wav` (tu "Uh-oh!"), etc., se usan en lugar de las imitaciones. También sirven `.mp3` y `.ogg`.
 
-## Usar
-
-1. Abrí la app y escaneá el QR con WhatsApp en tu teléfono (**Dispositivos vinculados → Vincular un dispositivo**). La sesión queda guardada.
-2. Elegí la skin en **Herramientas → Skin** (MSN) o **Main → Change Skin** (ICQ).
+## Bueno saber
 
 El nick, el mensaje personal, el estado y el ICQ# son decorativos: se guardan en tu PC y **no cambian nada en WhatsApp**.
 
