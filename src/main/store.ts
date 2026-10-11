@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { userInfo } from 'node:os'
+import { EOL, userInfo } from 'node:os'
 import { join } from 'node:path'
 import { app, type Rectangle } from 'electron'
 import type { Settings } from '@shared/types'
@@ -78,7 +78,7 @@ export const store = {
   }
 }
 
-/** Where users can drop their own .wav/.mp3 to replace the built-in imitations. */
+/** Where users can drop their own .wav/.mp3 to replace the bundled sounds. */
 export const soundsDir = (): string => join(dir(), 'sounds')
 
 export function ensureSoundsDir(): string {
@@ -89,17 +89,17 @@ export function ensureSoundsDir(): string {
     writeFileSync(
       readme,
       [
-        'Poné acá tus propios sonidos y la app los usa en lugar de las imitaciones.',
+        'Poné acá tus propios sonidos y la app los usa en lugar de los originales que trae.',
         '',
-        'msn\\message.wav  -> mensaje nuevo',
-        'msn\\nudge.wav    -> zumbido',
-        'msn\\online.wav   -> contacto en línea',
-        'icq\\message.wav  -> mensaje nuevo ("Uh-oh!")',
-        'icq\\nudge.wav    -> zumbido',
-        'icq\\online.wav   -> contacto en línea',
+        'msn/message.wav  -> mensaje nuevo',
+        'msn/nudge.wav    -> zumbido',
+        'msn/online.wav   -> contacto en línea',
+        'icq/message.wav  -> mensaje nuevo ("Uh-oh!")',
+        'icq/nudge.wav    -> zumbido',
+        'icq/online.wav   -> contacto en línea',
         '',
         'También sirven .mp3 u .ogg con el mismo nombre.'
-      ].join('\r\n')
+      ].join(EOL)
     )
   }
   return root

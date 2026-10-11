@@ -65,12 +65,8 @@ root.addEventListener('click', (event) => {
   const menu = target.closest<HTMLElement>('[data-menu]')
   if (menu) {
     const r = menu.getBoundingClientRect()
-    const below = !menu.closest('.icq-bottom')
-    return api.openMenu(menu.dataset.menu as never, r.left, below ? r.bottom : r.top)
+    return api.openMenu(menu.dataset.menu as never, r.left, r.bottom)
   }
-  const action = target.closest<HTMLElement>('[data-action]')
-  if (action?.dataset.action === 'nudge') return api.sendNudge()
-  if (action?.dataset.action === 'search') return api.focusSearch()
 })
 
 root.addEventListener('dblclick', (event) => {

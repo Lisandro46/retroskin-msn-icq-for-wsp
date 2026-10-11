@@ -17,14 +17,12 @@ const api: ShellApi = {
   setIcon: (dataUrl) => ipcRenderer.send('shell:icon', dataUrl),
   soundFile: (skin, sound) => ipcRenderer.invoke('shell:sound-file', skin, sound),
   sendNudge: () => ipcRenderer.send('shell:nudge'),
-  focusSearch: () => ipcRenderer.send('shell:focus-search'),
   onSettings: on('settings'),
   onWaState: on('wa-state'),
   onPlay: on('play'),
   onShake: on('shake'),
   onMaximized: on('maximized'),
-  onDialog: on('dialog'),
-  onProfilePic: on('profile-pic')
+  onDialog: on('dialog')
 }
 
 contextBridge.exposeInMainWorld('messenger', api)

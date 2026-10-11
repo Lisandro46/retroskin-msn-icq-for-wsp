@@ -13,7 +13,7 @@ html[data-skin='msn'] [data-wm-hide] {
   display: none !important;
 }
 html[data-skin='msn'] #app :is(div, span, p, input, button, li, strong, em, h1, h2, h3, a, ol, label) {
-  font-family: Tahoma, 'Segoe UI', sans-serif !important;
+  font-family: Tahoma, 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif !important;
 }
 
 /* ------------------------------------------------------------- login (QR) */
@@ -168,7 +168,7 @@ html[data-skin='msn'] header [data-testid='wa-wordmark'] {
 }
 html[data-skin='msn'] header[data-testid='chatlist-header'] h2::before {
   content: 'Contactos';
-  font: bold 11px Tahoma, sans-serif;
+  font: bold 11px Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   color: var(--msn-blue);
   padding-left: 20px;
   background: var(--wm-msn-logo) left center / 16px no-repeat;
@@ -212,7 +212,7 @@ html[data-skin='msn'] [data-testid='chat-list']::before {
   content: none;
   display: block;
   padding: 6px 12px 2px;
-  font: bold 11px Tahoma, sans-serif;
+  font: bold 11px Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   color: var(--msn-blue);
 }
 html[data-skin='msn'] #pane-side [data-testid='cell-frame-container'] {
@@ -314,7 +314,7 @@ html[data-skin='msn'] [data-wm-first='1']::before {
   display: block;
   margin: 10px 0 1px 12px;
   color: #6d6d6d;
-  font: 12px Tahoma, sans-serif;
+  font: 12px Tahoma, Verdana, 'DejaVu Sans', sans-serif;
 }
 /* Groups: WhatsApp already prints the author (next to their picture). */
 html[data-skin='msn'] [data-wm-msg]:has([data-testid='author'])::before {
@@ -348,7 +348,7 @@ html[data-skin='msn'] [data-wm-nudge='1']::after {
   border-top: 1px dotted #9ab3dc;
   border-bottom: 1px dotted #9ab3dc;
   color: #444;
-  font: 13px Tahoma, sans-serif;
+  font: 13px Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   background: var(--wm-nudge) 2px center / 16px no-repeat;
 }
 html[data-skin='msn'] [data-wm-nudge='1'][data-wm-msg='out']::after {

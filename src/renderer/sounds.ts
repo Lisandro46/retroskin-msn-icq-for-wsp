@@ -1,6 +1,6 @@
 /**
- * Synthesized imitations of the classic sounds. If the user put their own file in
- * the sounds folder (see store.ensureSoundsDir) that one plays instead.
+ * Synthesized imitations of the classic sounds, used only when no file is found:
+ * first the user's sounds folder (store.ensureSoundsDir), then the originals in resources/sounds.
  */
 import type { SkinId, SoundId } from '@shared/types'
 

@@ -1,16 +1,26 @@
 {
   "name": "retro-messenger-whatsapp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "WhatsApp Web vestido de MSN Messenger 7.5 o ICQ 2000b (solo estético)",
   "main": "out/main/index.js",
-  "author": "Lisandro Arrigoni",
+  "author": {
+    "name": "Lisandro Arrigoni",
+    "email": "72736792+Lisandro46@users.noreply.github.com"
+  },
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=20.11"
+  },
   "scripts": {
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "dist": "npm run build && electron-builder --win --publish never",
+    "dist": "npm run dist:win",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "icon": "electron scripts/make-icon.mjs",
     "preview:retro": "node scripts/preview-retro.mjs"
   },
   "build": {
@@ -23,6 +33,22 @@
     "files": [
       "out/**/*",
       "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/sounds",
+        "to": "sounds",
+        "filter": [
+          "**/*.wav",
+          "**/*.mp3",
+          "**/*.ogg",
+          "CREDITOS.md"
+        ]
+      },
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
     ],
     "win": {
       "target": [
@@ -41,6 +67,44 @@
     },
     "portable": {
       "artifactName": "Retro-Messenger-Portable.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "category": "public.app-category.social-networking",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "artifactName": "Retro-Messenger-mac-${arch}.${ext}"
+    },
+    "dmg": {
+      "title": "Retro Messenger"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "executableName": "retro-messenger",
+      "category": "Network;InstantMessaging",
+      "synopsis": "WhatsApp Web con skins de MSN Messenger 7.5 e ICQ 2000b",
+      "maintainer": "Lisandro Arrigoni <72736792+Lisandro46@users.noreply.github.com>",
+      "artifactName": "Retro-Messenger-linux-${arch}.${ext}"
     }
   },
   "devDependencies": {

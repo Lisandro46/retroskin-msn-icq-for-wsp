@@ -4,7 +4,7 @@ body[data-skin='icq'] {
   --face: #c0c0c0;
   --bevel-out: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
   --bevel-in: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
-  font: 11px 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, sans-serif;
+  font: 11px 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   color: #000;
 }
 body[data-skin='icq'] .window {

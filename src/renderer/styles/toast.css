@@ -48,7 +48,7 @@ body {
 
 /* MSN: light blue with the blue strip on top */
 body[data-skin='msn'] {
-  font: 11px Tahoma, sans-serif;
+  font: 11px Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   background: linear-gradient(180deg, #fff, #c6dbf7);
   border: 1px solid #5b87cf;
   box-sizing: border-box;
@@ -72,7 +72,7 @@ body[data-skin='msn'] .foot {
 
 /* ICQ: Win98 grey box */
 body[data-skin='icq'] {
-  font: 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: 11px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   background: #c0c0c0;
   box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
   padding: 3px;

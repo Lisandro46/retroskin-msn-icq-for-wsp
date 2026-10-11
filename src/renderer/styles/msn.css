@@ -17,7 +17,7 @@ body[data-skin='msn'] .titlebar {
   border-radius: 8px 8px 0 0;
   background: linear-gradient(180deg, #0997ff, #0053ee 8%, #0050ee 40%, #06f 88%, #06f 93%, #005bff 95%, #003dd7 96%, #003dd7);
   color: #fff;
-  font: bold 13px 'Trebuchet MS', Tahoma, sans-serif;
+  font: bold 13px 'Trebuchet MS', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   text-shadow: 1px 1px #0f1089;
 }
 body[data-skin='msn'] .tbtns button {

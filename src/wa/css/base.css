@@ -4,7 +4,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 2147483000;
-  font: 11px Tahoma, 'Segoe UI', sans-serif;
+  font: 11px Tahoma, 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif;
 }
 #wm-root > *,
 #wm-bar > * {

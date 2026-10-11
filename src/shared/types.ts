@@ -48,14 +48,12 @@ export interface ShellApi {
   setIcon(dataUrl: string): void
   soundFile(skin: SkinId, sound: SoundId): Promise<string | null>
   sendNudge(): void
-  focusSearch(): void
   onSettings(cb: (settings: Settings) => void): void
   onWaState(cb: (state: WaState) => void): void
   onPlay(cb: (sound: SoundId) => void): void
   onShake(cb: () => void): void
   onMaximized(cb: (maximized: boolean) => void): void
   onDialog(cb: (dialog: 'options' | 'about') => void): void
-  onProfilePic(cb: (url: string | null) => void): void
 }
 
 export const MSN_STATUS_LABEL: Record<MsnStatus, string> = {

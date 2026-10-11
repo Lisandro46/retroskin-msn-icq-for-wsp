@@ -7,7 +7,7 @@ body {
   height: 100%;
   overflow: hidden;
   user-select: none;
-  font: 11px Tahoma, 'Segoe UI', sans-serif;
+  font: 11px Tahoma, 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif;
   background: var(--bg, #111b21);
 }
 button {
@@ -223,7 +223,7 @@ body[data-skin='off'] .titlebar {
   height: 30px;
   padding-left: 12px;
   background: #202c33;
-  font: 12px 'Segoe UI', sans-serif;
+  font: 12px 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif;
 }
 body[data-skin='off'] .skinbtn {
   -webkit-app-region: no-drag;

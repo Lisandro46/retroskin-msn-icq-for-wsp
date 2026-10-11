@@ -12,7 +12,7 @@ html[data-skin='icq'] [data-wm-hide] {
   display: none !important;
 }
 html[data-skin='icq'] #app :is(div, span, p, input, button, li, strong, em, h1, h2, h3, a, ol, label) {
-  font-family: 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, sans-serif !important;
+  font-family: 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif !important;
 }
 
 /* ------------------------------------------------------------- login (QR) */
@@ -45,7 +45,7 @@ html[data-skin='icq'] #wm-login {
   color: #000;
   background: var(--icq-face);
   box-shadow: var(--icq-bevel-out);
-  font-family: 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font-family: 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
 }
 html[data-skin='icq'] #wm-login .wm-logo {
   animation: wm-icq-spin 4s linear infinite;
@@ -63,7 +63,7 @@ html[data-skin='icq'] #wm-login b {
 html[data-skin='icq'] #wm-bar {
   background: var(--icq-face);
   box-shadow: inset 0 1px #fff, inset 0 -1px #808080;
-  font-family: 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font-family: 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
 }
 html[data-skin='icq'] #wm-bar button {
   height: 23px;
@@ -98,7 +98,7 @@ html[data-skin='icq'] [data-testid='wa-web-main-screen'] > div {
 html[data-skin='icq'] #side,
 html[data-skin='icq'] #side > div,
 html[data-skin='icq'] #pane-side {
-  background-color: #d4d0c8 !important;
+  background-color: var(--icq-face) !important;
 }
 html[data-skin='icq'] #side {
   box-shadow: var(--icq-bevel-in);
@@ -128,7 +128,7 @@ html[data-skin='icq'] header [data-testid='wa-wordmark'] {
 }
 html[data-skin='icq'] header[data-testid='chatlist-header'] h2::before {
   content: 'My Contact List';
-  font: bold 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: bold 11px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   color: #000;
   padding-left: 20px;
   background: var(--wm-icq-contact) left center / 16px no-repeat;
@@ -177,7 +177,7 @@ html[data-skin='icq'] [data-testid='chat-list']::before {
   content: none;
   display: block;
   padding: 4px 10px 2px;
-  font: bold 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: bold 11px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
   color: #0000c0;
 }
 html[data-skin='icq'] #pane-side [data-testid='cell-frame-container'] {
@@ -213,7 +213,7 @@ html[data-skin='icq'] #pane-side [data-testid='cell-frame-title'] span[title] {
 html[data-skin='icq'] #pane-side [data-testid='cell-frame-secondary'],
 html[data-skin='icq'] #pane-side [data-testid='cell-frame-secondary'] span,
 html[data-skin='icq'] #pane-side [data-testid='cell-frame-primary-detail'] span {
-  color: #808080 !important;
+  color: #404040 !important;
 }
 html[data-skin='icq'] [data-testid='icon-unread-count'] {
   background: #c00000 !important;
@@ -288,7 +288,7 @@ html[data-skin='icq'] [data-wm-msg]:not([data-wm-first='1'])::before {
   display: block;
   margin: 6px 0 0 10px;
   color: #c00000;
-  font: bold 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: bold 11px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
 }
 html[data-skin='icq'] [data-wm-msg='out']::before {
   color: #0000c0 !important;
@@ -317,7 +317,7 @@ html[data-skin='icq'] [data-wm-nudge='1']::after {
   display: block;
   margin: 8px 10px;
   color: #c00000;
-  font: bold 13px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: bold 13px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif;
 }
 html[data-skin='icq'] [data-wm-nudge='1'][data-wm-msg='out']::after {
   content: '*** You sent a Zumbido! ***';

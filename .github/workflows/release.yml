@@ -1,5 +1,6 @@
-# Builds the Windows installer and portable .exe and attaches them to a GitHub Release.
-# Run it by pushing a tag:  git tag v0.1.0 && git push origin v0.1.0
+# Builds Windows, macOS and Linux packages and attaches them to a GitHub Release.
+# Run it by pushing a tag:  git tag v0.2.0 && git push origin v0.2.0
+# Run it by hand (Actions → Release → Run workflow) to get the files as build artifacts only.
 name: Release
 
 on:
@@ -11,8 +12,27 @@ permissions:
   contents: write
 
 jobs:
-  windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: win
+            files: |
+              dist/*.exe
+          - os: macos-latest
+            target: mac
+            files: |
+              dist/*.dmg
+              dist/*.zip
+          - os: ubuntu-latest
+            target: linux
+            files: |
+              dist/*.AppImage
+              dist/*.deb
+              dist/*.rpm
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -21,17 +41,36 @@ jobs:
           node-version: 22
           cache: npm
 
+      # electron-builder needs rpmbuild for the .rpm target.
+      - if: matrix.target == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y rpm
+
       - run: npm ci
 
-      - run: npm run dist
+      - run: npm run dist:${{ matrix.target }}
+
+      # Unsigned build: it must still carry an ad-hoc signature or Apple Silicon refuses to run it.
+      - if: matrix.target == 'mac'
+        run: |
+          for app in dist/mac*/*.app; do codesign --verify --deep --strict "$app" && codesign -dv "$app"; done
 
       - uses: actions/upload-artifact@v4
         with:
-          name: retro-messenger
-          path: dist/*.exe
+          name: retro-messenger-${{ matrix.target }}
+          path: ${{ matrix.files }}
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
 
       - uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: dist/*.exe
+          files: dist/*
           generate_release_notes: true

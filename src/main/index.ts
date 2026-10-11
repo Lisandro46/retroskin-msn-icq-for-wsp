@@ -24,8 +24,19 @@ import { ensureSoundsDir, soundsDir, store } from './store'
 import { showToast } from './toast'
 
 const WHATSAPP_URL = 'https://web.whatsapp.com/'
-/** WhatsApp only serves browsers it knows, so the view introduces itself as plain Chrome. */
-const CHROME_UA = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome.split('.')[0]}.0.0.0 Safari/537.36`
+/** WhatsApp only serves browsers it knows, so the view introduces itself as plain Chrome on this OS. */
+const UA_PLATFORM: Record<string, string> = {
+  win32: 'Windows NT 10.0; Win64; x64',
+  darwin: 'Macintosh; Intel Mac OS X 10_15_7',
+  linux: 'X11; Linux x86_64'
+}
+const CHROME_UA = `Mozilla/5.0 (${UA_PLATFORM[process.platform] ?? UA_PLATFORM.linux}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${process.versions.chrome.split('.')[0]}.0.0.0 Safari/537.36`
+
+/** Original MSN/ICQ sounds shipped with the app (extraResources in the installer). */
+const bundledSoundsDir = (): string =>
+  app.isPackaged ? join(process.resourcesPath, 'sounds') : join(app.getAppPath(), 'resources', 'sounds')
+/** App icon for the tray until the shell sends its skin-specific one (Linux hides empty trays). */
+const appIcon = (): string => (app.isPackaged ? join(process.resourcesPath, 'icon.png') : join(app.getAppPath(), 'build', 'icon.png'))
 
 let win: BrowserWindow | undefined
 let wa: WebContentsView | undefined
@@ -207,7 +218,6 @@ function registerWaEvents(): void {
     if (event.sender === wa?.webContents) event.sender.send('wa:settings', settings())
   })
   ipcMain.on('wa:state', (_event, state: WaState) => setWaState(state))
-  ipcMain.on('wa:profile-pic', (_event, url: string | null) => sendShell('profile-pic', url))
 
   ipcMain.on('wa:nudge-sent', () => {
     play('nudge')
@@ -409,7 +419,7 @@ function createWindow(): void {
   if (process.env.ELECTRON_RENDERER_URL) void win.loadURL(process.env.ELECTRON_RENDERER_URL)
   else void win.loadFile(join(__dirname, '../renderer/index.html'))
 
-  tray = new Tray(nativeImage.createEmpty())
+  tray = new Tray(nativeImage.createFromPath(appIcon()).resize({ width: 16, height: 16, quality: 'best' }))
   tray.on('click', () => (win?.isVisible() && win.isFocused() ? win.minimize() : (win?.show(), win?.focus())))
   refreshTray()
 }
@@ -440,11 +450,14 @@ function registerShellEvents(): void {
     refreshTray()
   })
   ipcMain.on('shell:nudge', () => sendWa('wa:send-nudge'))
-  ipcMain.on('shell:focus-search', () => sendWa('wa:focus-search'))
   ipcMain.handle('shell:sound-file', (_event, skin: SkinId, sound: SoundId) => {
-    for (const [ext, mime] of [['wav', 'audio/wav'], ['mp3', 'audio/mpeg'], ['ogg', 'audio/ogg']]) {
-      const path = join(soundsDir(), skin, `${sound}.${ext}`)
-      if (existsSync(path)) return `data:${mime};base64,${readFileSync(path).toString('base64')}`
+    if (!['msn', 'icq'].includes(skin) || !['message', 'nudge', 'online'].includes(sound)) return null
+    // The user's own files win over the bundled originals; null falls back to the synthesized ones.
+    for (const dir of [soundsDir(), bundledSoundsDir()]) {
+      for (const [ext, mime] of [['wav', 'audio/wav'], ['mp3', 'audio/mpeg'], ['ogg', 'audio/ogg']]) {
+        const path = join(dir, skin, `${sound}.${ext}`)
+        if (existsSync(path)) return `data:${mime};base64,${readFileSync(path).toString('base64')}`
+      }
     }
     return null
   })
@@ -459,12 +472,17 @@ if (!app.requestSingleInstanceLock()) {
     win.show()
     win.focus()
   })
-  app.setAppUserModelId('com.lisandro.retro-messenger')
+  if (process.platform === 'win32') app.setAppUserModelId('com.lisandro.retro-messenger')
   app.whenReady().then(() => {
     ensureSoundsDir()
     registerShellEvents()
     registerWaEvents()
     createWindow()
+  })
+  // macOS: clicking the Dock icon brings back a hidden or minimized window.
+  app.on('activate', () => {
+    if (win?.isMinimized()) win.restore()
+    win?.show()
   })
   app.on('window-all-closed', () => app.quit())
 }

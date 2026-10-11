@@ -78,7 +78,6 @@ function buildOverlay(): void {
       <div id="wm-login"><span class="wm-logo">${icqFlower('logo', 44)}</span>
         <div><b>ICQ Login</b><span>Scan the code with WhatsApp on your phone to link WhatsApp. Your ICQ details stay local.</span></div></div>
       <div id="wm-bar">
-
         <span id="wm-status"></span>
         <button id="wm-send" title="Send (Enter)">Send</button>
       </div>`
@@ -115,12 +114,24 @@ function syncSidebar(): void {
   if (fingerprint === sidebarFingerprint || profile?.contains(document.activeElement)) return
   if (profile) profile.innerHTML = sidebarProfile(settings)
   if (footer) footer.innerHTML = sidebarFooter(settings)
-  const img = part<HTMLImageElement>('wm-profile-pic')
-  if (img) {
-    img.src = ownPicture() || svgUrl(samplePicture(96))
-    img.onerror = () => { img.onerror = null; img.src = svgUrl(samplePicture(96)) }
-  }
   sidebarFingerprint = fingerprint
+  syncProfilePicture()
+}
+
+/** WhatsApp's picture URLs expire: one that failed is not retried, the sample picture stays instead. */
+let failedPicture = ''
+function syncProfilePicture(): void {
+  const img = part<HTMLImageElement>('wm-profile-pic')
+  if (!img) return
+  const own = ownPicture()
+  const src = own && own !== failedPicture ? own : svgUrl(samplePicture(96))
+  if (img.getAttribute('src') === src) return
+  img.onerror = () => {
+    img.onerror = null
+    failedPicture = own
+    img.src = svgUrl(samplePicture(96))
+  }
+  img.src = src
 }
 
 function bindSidebar(): void {
@@ -134,17 +145,6 @@ function bindSidebar(): void {
       menu: button.dataset.wmMenu, x: r.left,
       y: button.closest('#wm-side-footer') ? r.top : r.bottom
     })
-  })
-  overlay?.addEventListener('keydown', (event) => {
-    const field = (event.target as HTMLElement).closest<HTMLElement>('[data-wm-edit]')
-    if (!field || !settings) return
-    // Editing local nick/PM must not send a chat message or a zumbido.
-    event.stopPropagation()
-    if (event.key === 'Enter') { event.preventDefault(); field.blur() }
-    if (event.key === 'Escape') {
-      field.textContent = String(settings[field.dataset.wmEdit as keyof Settings] ?? '')
-      field.blur()
-    }
   })
   overlay?.addEventListener('focusout', (event) => {
     const field = (event.target as HTMLElement).closest<HTMLElement>('[data-wm-edit]')
@@ -440,10 +440,45 @@ function focusSearch(): void {
   box?.click()
 }
 
+const editField = (event: Event): HTMLElement | null =>
+  (event.target as HTMLElement | null)?.closest?.<HTMLElement>('#wm-root [data-wm-edit]') ?? null
+
+/**
+ * Editing the local nick/personal message must not reach WhatsApp: its own listeners
+ * would otherwise move focus to the composer, send, or run shortcuts like Ctrl+G.
+ * Registered on window in the capture phase so it runs before any of them.
+ */
+function guardEditKeys(event: KeyboardEvent): void {
+  const field = editField(event)
+  if (!field) return
+  event.stopImmediatePropagation()
+  if (event.type !== 'keydown' || !settings) return
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'g') event.preventDefault()
+  else if (event.key === 'Enter') {
+    event.preventDefault()
+    field.blur()
+  } else if (event.key === 'Escape') {
+    event.preventDefault()
+    field.textContent = String(settings[field.dataset.wmEdit as keyof Settings] ?? '')
+    field.blur()
+  }
+}
+for (const type of ['keydown', 'keypress', 'keyup'] as const) window.addEventListener(type, guardEditKeys, true)
+window.addEventListener(
+  'paste',
+  (event) => {
+    if (!editField(event)) return
+    // Single-line plain text only.
+    event.stopImmediatePropagation()
+    event.preventDefault()
+    document.execCommand('insertText', false, (event.clipboardData?.getData('text/plain') ?? '').replace(/\s+/g, ' '))
+  },
+  true
+)
+
 window.addEventListener(
   'keydown',
   (event) => {
-    if ((event.target as HTMLElement)?.closest?.('[data-wm-edit]')) return
     if (event.ctrlKey && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'g') {
       event.preventDefault()
       event.stopPropagation()
@@ -473,8 +508,6 @@ function markLogin(): void {
 
 /* -------------------------------------------------------------------- loop */
 
-let lastPicSent: string | null | undefined
-
 function detectState(): WaState {
   if (document.querySelector(SEL.ready)) return 'ready'
   if (document.querySelector(SEL.login)) return 'login'
@@ -495,16 +528,9 @@ function tick(): void {
   if (state === 'login') markLogin()
   if (state === 'ready') {
     syncSidebar()
-    const profileImg = part<HTMLImageElement>('wm-profile-pic')
-    const own = ownPicture() || svgUrl(samplePicture(96))
-    if (profileImg && profileImg.getAttribute('src') !== own) profileImg.src = own
+    syncProfilePicture()
     updateConversation()
     watchChatList()
-    const pic = ownPicture() || null
-    if (pic !== lastPicSent) {
-      lastPicSent = pic
-      ipcRenderer.send('wa:profile-pic', pic && pic.startsWith('https:') ? pic : null)
-    }
   }
   placeOverlay()
 }

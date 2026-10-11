@@ -16,11 +16,13 @@ html[data-skin] #side[data-wm-sidebar='1'] {
   padding-top: var(--wm-profile-h) !important;
   padding-bottom: var(--wm-side-footer-h) !important;
 }
+/* The narrower skin fonts/icons can overflow the list by a pixel; never show a horizontal bar. */
+html[data-skin] #side[data-wm-sidebar='1'] #pane-side { overflow-x: hidden !important; }
 html[data-skin] #main[data-wm-chat-frame='1'] { padding-top: 22px !important; box-sizing: border-box !important; }
 #wm-chat-title {
   top: var(--wm-main-top); left: var(--wm-main-left); width: var(--wm-main-width); height: 22px;
   align-items: center; padding: 0 8px; overflow: hidden; white-space: nowrap;
-  font: bold 11px Tahoma, sans-serif; pointer-events: none;
+  font: bold 11px Tahoma, Verdana, 'DejaVu Sans', sans-serif; pointer-events: none;
 }
 #wm-root button { font: inherit; cursor: default; }
 #wm-root button:focus-visible { outline: 1px dotted currentColor; outline-offset: -3px; }
@@ -32,7 +34,7 @@ html[data-skin='msn'] { --wm-profile-h: 78px; --wm-side-footer-h: 76px; }
 html[data-skin='msn'] #wm-profile {
   padding: 7px 8px; gap: 7px; align-items: flex-start;
   color: #111; background: linear-gradient(#f5f9ff, #d7e5f7);
-  border-bottom: 1px solid #a7bddb; font: 11px Tahoma, sans-serif;
+  border-bottom: 1px solid #a7bddb; font: 11px Tahoma, Verdana, 'DejaVu Sans', sans-serif;
 }
 .wm-profile-picture { width: 46px; height: 46px; padding: 2px; flex: none; background: white; border: 1px solid #7f9dbe; border-radius: 4px; }
 .wm-profile-picture img { width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 2px; }
@@ -56,7 +58,7 @@ html[data-skin='msn'] #wm-side-footer { background: linear-gradient(#eff5fd, #d1
 .wm-ad small { font-size: 10px; color: #365f8c; margin-top: 3px; }
 html[data-skin='msn'] #wm-chat-title { background: linear-gradient(#1285f0, #0054e3 20%, #0867ea 90%, #003caa); color: #fff; text-shadow: 1px 1px #06347e; border-left: 1px solid #0040b4; }
 html[data-skin='icq'] { --wm-profile-h: 46px; --wm-side-footer-h: 44px; }
-html[data-skin='icq'] #wm-root { font: 11px 'Microsoft Sans Serif', Tahoma, sans-serif; }
+html[data-skin='icq'] #wm-root { font: 11px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif; }
 html[data-skin='icq'] #wm-profile { flex-direction: column; padding: 3px 5px; gap: 3px; color: #000; background: var(--icq-face); box-shadow: inset 0 -1px #808080; }
 .wm-icq-brand { display: flex; align-items: center; gap: 2px; height: 17px; }
 .wm-icq-brand b { color: #333; }
