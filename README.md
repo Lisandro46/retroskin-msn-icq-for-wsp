@@ -2,6 +2,8 @@
 
 **WhatsApp Web vestido de MSN Messenger 7.5 o de ICQ 2000b**, con zumbido, sonidos, avisos emergentes y todos los chiches. Hermano nostálgico de [Winamp Remote para TIDAL](https://github.com/Lisandro46/winamp-tidal).
 
+**Página oficial y descargas: [retro.trincherai.com](https://retro.trincherai.com)**
+
 > Proyecto de fan, gratis y de código abierto. **Todo es estético**: WhatsApp funciona exactamente igual que en el navegador. No está afiliado a WhatsApp, Meta, Microsoft ni ICQ. Los íconos son imitaciones hechas a mano. Los sonidos son los originales de MSN e ICQ, de sus respectivos dueños, incluidos solo por nostalgia ([créditos](resources/sounds/CREDITOS.md)).
 
 ## Descargar e instalar (1 minuto)
@@ -101,6 +103,7 @@ npm run dist:win   # instalador y portable en dist/ (también: npm run dist)
 npm run dist:mac   # .dmg y .zip (solo desde una Mac)
 npm run dist:linux # AppImage, .deb y .rpm (desde Linux; .rpm necesita rpmbuild)
 npm run icon       # regenera build/icon.png a 1024 px
+npm run web:assets # capturas e imagen para compartir de la página web/ (ver PUBLICAR.md)
 ```
 
 Para publicar una versión: `git tag v0.2.0 && git push origin v0.2.0` y GitHub Actions arma los paquetes de Windows, Mac y Linux. También se puede correr a mano desde **Actions → Release → Run workflow** para bajar los archivos sin publicar.

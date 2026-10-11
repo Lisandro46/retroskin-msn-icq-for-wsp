@@ -21,7 +21,8 @@
     "dist:mac": "npm run build && electron-builder --mac --publish never",
     "dist:linux": "npm run build && electron-builder --linux --publish never",
     "icon": "electron scripts/make-icon.mjs",
-    "preview:retro": "node scripts/preview-retro.mjs"
+    "preview:retro": "node scripts/preview-retro.mjs",
+    "web:assets": "electron scripts/capture-web.mjs"
   },
   "build": {
     "appId": "com.lisandro.retro-messenger",
