@@ -63,11 +63,11 @@ export function msnGroup(size = 16): string {
   )
 }
 
-/** ICQ-like flower: 7 petals around a yellow centre. */
+/** ICQ-like flower: eight narrow petals around a yellow centre. */
 function flowerShape(petals: string[], center = '#ffd21f', opacity = 1): string {
   const parts = petals.map((color, i) => {
     const angle = (i * 360) / petals.length - 90
-    return `<ellipse cx="16" cy="7.2" rx="4.6" ry="6.6" fill="${color}" stroke="rgba(0,0,0,.45)" stroke-width=".8" transform="rotate(${angle + 90} 16 16)"/>`
+    return `<ellipse cx="16" cy="7.5" rx="3.6" ry="5.8" fill="${color}" stroke="rgba(0,0,0,.45)" stroke-width=".8" transform="rotate(${angle + 90} 16 16)"/>`
   })
   return `<g opacity="${opacity}">${parts.join('')}<circle cx="16" cy="16" r="4.4" fill="${center}" stroke="rgba(0,0,0,.45)" stroke-width=".8"/></g>`
 }
@@ -75,14 +75,16 @@ function flowerShape(petals: string[], center = '#ffd21f', opacity = 1): string 
 const GREEN = '#35b033'
 const RED = '#e3261c'
 
-export function icqFlower(status: IcqStatus | 'offline' | 'logo' = 'online', size = 16): string {
-  const all = (c: string): string[] => Array(7).fill(c)
+export function icqFlower(status: IcqStatus | 'offline' | 'logo' | 'unknown' = 'online', size = 16): string {
+  const all = (c: string): string[] => Array(8).fill(c)
   switch (status) {
     case 'logo': {
       const petals = all(GREEN)
       petals[1] = RED
       return svg(size, flowerShape(petals))
     }
+    case 'unknown':
+      return svg(size, flowerShape(all('#aaa'), '#ddd'))
     case 'offline':
       return svg(size, flowerShape(all(RED)))
     case 'invisible':
@@ -106,9 +108,9 @@ export function icqFlower(status: IcqStatus | 'offline' | 'logo' = 'online', siz
 export function icqGroup(size = 16): string {
   return svg(
     size,
-    `<g transform="translate(-2 -2) scale(.62)">${flowerShape(Array(7).fill(GREEN))}</g>
-     <g transform="translate(14 -1) scale(.55)">${flowerShape(Array(7).fill(GREEN))}</g>
-     <g transform="translate(6 11) scale(.62)">${flowerShape(Array(7).fill(GREEN))}</g>`
+    `<g transform="translate(-2 -2) scale(.62)">${flowerShape(Array(8).fill(GREEN))}</g>
+     <g transform="translate(14 -1) scale(.55)">${flowerShape(Array(8).fill(GREEN))}</g>
+     <g transform="translate(6 11) scale(.62)">${flowerShape(Array(8).fill(GREEN))}</g>`
   )
 }
 
@@ -153,12 +155,23 @@ export function iconCssVars(): string {
   const v = (markup: string): string => `url("${svgUrl(markup)}")`
   return `:root {
   --wm-msn-buddy: ${v(msnBuddy('online', 32))};
+  --wm-msn-contact: ${v(svg(16, buddyShape(3, 2, '#b4b8bd', '#6b7076', 1.1)))};
   --wm-msn-group: ${v(msnGroup(32))};
   --wm-msn-logo: ${v(msnLogo(32))};
   --wm-icq-online: ${v(icqFlower('online', 32))};
+  --wm-icq-contact: ${v(icqFlower('unknown', 16))};
   --wm-icq-offline: ${v(icqFlower('offline', 32))};
   --wm-icq-group: ${v(icqGroup(32))};
   --wm-icq-note: ${v(noteIcon(32))};
   --wm-nudge: ${v(nudgeIcon(32))};
 }`
+}
+
+/** Small original drawings for local actions; aligned to a 16px grid. */
+export function searchIcon(size = 16): string {
+  return svg(size, '<circle cx="6.5" cy="6.5" r="4.5" fill="#eef6ff" stroke="#315274"/><path d="m10 10 4.5 4.5" stroke="#284664" stroke-width="3"/><path d="m3.5 5 1-1" stroke="#fff" stroke-width="2"/>', '0 0 16 16')
+}
+
+export function settingsIcon(size = 16): string {
+  return svg(size, '<rect x="2" y="2" width="12" height="12" fill="#ece9d8" stroke="#6b7788"/><path d="M4 5h8M4 8h8M4 11h8" stroke="#7e8791"/><rect x="5" y="4" width="2" height="2" fill="#3883c7"/><rect x="9" y="7" width="2" height="2" fill="#3883c7"/><rect x="6" y="10" width="2" height="2" fill="#3883c7"/>', '0 0 16 16')
 }

@@ -16,6 +16,7 @@ import {
 import type { MenuId, Rect, Settings, SkinId, SoundId, WaState } from '@shared/types'
 import { ICQ_STATUS_LABEL, MSN_STATUS_LABEL, type IcqStatus, type MsnStatus } from '@shared/types'
 import baseCss from '@wa/css/base.css?raw'
+import chromeCss from '@wa/css/chrome.css?raw'
 import msnCss from '@wa/css/msn.css?raw'
 import icqCss from '@wa/css/icq.css?raw'
 import { iconCssVars } from '@shared/icons'
@@ -98,7 +99,7 @@ function createWhatsAppView(window: BrowserWindow): WebContentsView {
   contents.session.setUserAgent(CHROME_UA)
 
   const injectCss = (): void => {
-    void contents.insertCSS(`${iconCssVars()}\n${baseCss}\n${msnCss}\n${icqCss}`)
+    void contents.insertCSS(`${iconCssVars()}\n${baseCss}\n${chromeCss}\n${msnCss}\n${icqCss}`)
     applyZoom()
   }
   contents.on('dom-ready', injectCss)
@@ -174,7 +175,34 @@ function play(sound: SoundId): void {
   if (settings().sounds) sendShell('play', sound)
 }
 
+
+/** Only local profile fields and a fixed set of menu actions cross this bridge. */
+function registerSidebarEvents(): void {
+  ipcMain.on('wa:profile-edit', (event, patch: Record<string, unknown>) => {
+    if (event.sender !== wa?.webContents || !patch || typeof patch !== 'object') return
+    const clean: Partial<Settings> = {}
+    if (typeof patch.nick === 'string') {
+      const nick = patch.nick.replace(/\s+/g, ' ').trim().slice(0, 80)
+      if (nick) clean.nick = nick
+    }
+    if (typeof patch.personalMessage === 'string') clean.personalMessage = patch.personalMessage.replace(/\s+/g, ' ').trim().slice(0, 120)
+    if (typeof patch.uin === 'string') {
+      const uin = patch.uin.replace(/\D/g, '').slice(0, 12)
+      if (uin) clean.uin = uin
+    }
+    if (Object.keys(clean).length) updateSettings(clean)
+  })
+  ipcMain.on('wa:menu', (event, request: { menu: MenuId; x: number; y: number }) => {
+    if (event.sender !== wa?.webContents || !request) return
+    if (!['status', 'tools', 'icq-main', 'icq-services'].includes(request.menu)) return
+    if (!Number.isFinite(request.x) || !Number.isFinite(request.y)) return
+    const zoom = wa!.webContents.getZoomFactor()
+    popup(request.menu, contentRect.x + request.x * zoom, contentRect.y + request.y * zoom)
+  })
+}
+
 function registerWaEvents(): void {
+  registerSidebarEvents()
   ipcMain.on('wa:hello', (event) => {
     if (event.sender === wa?.webContents) event.sender.send('wa:settings', settings())
   })

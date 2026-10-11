@@ -1,4 +1,4 @@
-/* ICQ 2000b on Windows 98: grey 3D bevels, navy title bar, yellow buttons. */
+/* ICQ 2000b on Windows 98: grey 3D bevels, navy title bar, compact classic controls. */
 body[data-skin='icq'] {
   --bg: #c0c0c0;
   --face: #c0c0c0;
@@ -59,93 +59,6 @@ body[data-skin='icq'] .g-close::after {
   width: 2px;
 }
 
-/* Header: flower, ICQ#, nick, toolbar */
-body[data-skin='icq'] .icq-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 4px 4px;
-}
-body[data-skin='icq'] .icq-logo {
-  display: flex;
-  animation: icq-spin 8s linear infinite;
-}
-@keyframes icq-spin {
-  to { transform: rotate(360deg); }
-}
-body[data-skin='icq'] .icq-ids {
-  flex: 1;
-  min-width: 0;
-  line-height: 15px;
-}
-body[data-skin='icq'] .icq-uin {
-  font-weight: bold;
-  color: #000080;
-}
-body[data-skin='icq'] .icq-nick {
-  color: #333;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-body[data-skin='icq'] [data-edit] {
-  padding: 0 2px;
-}
-body[data-skin='icq'] [data-edit]:hover,
-body[data-skin='icq'] [data-edit]:focus {
-  background: #fff;
-  box-shadow: var(--bevel-in);
-}
-body[data-skin='icq'] .icq-tools {
-  display: flex;
-  gap: 4px;
-}
-body[data-skin='icq'] .btn98,
-body[data-skin='icq'] .dialog .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  min-height: 23px;
-  padding: 0 8px;
-  border: 0;
-  background: var(--face);
-  box-shadow: var(--bevel-out);
-}
-body[data-skin='icq'] .btn98:active,
-body[data-skin='icq'] .dialog .btn:active {
-  box-shadow: var(--bevel-in);
-}
-body[data-skin='icq'] .btn98:focus-visible {
-  outline: 1px dotted #000;
-  outline-offset: -4px;
-}
-
-/* Fake tabs (All / Online, Users / Groups) */
-body[data-skin='icq'] .icq-tabs {
-  display: flex;
-  gap: 0;
-  padding: 0 4px;
-  margin-top: 2px;
-}
-body[data-skin='icq'] .icq-tabs span {
-  padding: 2px 10px 3px;
-  background: var(--face);
-  box-shadow: inset 1px 1px #fff, inset -1px 0 #0a0a0a, inset -2px 0 #808080;
-  border-radius: 3px 3px 0 0;
-  color: #444;
-}
-body[data-skin='icq'] .icq-tabs span.on {
-  color: #000;
-  font-weight: bold;
-  transform: translateY(1px);
-}
-body[data-skin='icq'] .icq-tabs .sep {
-  flex: 1;
-  box-shadow: none;
-  background: none;
-}
-
 body[data-skin='icq'] #content {
   margin: 0 4px;
   background: #fff;
@@ -164,32 +77,6 @@ body[data-skin='icq'] .loading .blink {
   50% { opacity: 0.25; }
 }
 
-/* Bottom: Main / Services / status */
-body[data-skin='icq'] .icq-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: 5px 4px 2px;
-}
-body[data-skin='icq'] .icq-row {
-  display: flex;
-  gap: 3px;
-}
-body[data-skin='icq'] .icq-yellow {
-  flex: 1;
-  font-weight: bold;
-  background: linear-gradient(180deg, #fff3a0, #f7d732 60%, #e3b800);
-}
-body[data-skin='icq'] .icq-sysnotice {
-  flex: none;
-  width: 28px;
-  padding: 0;
-}
-body[data-skin='icq'] .icq-statusbtn {
-  justify-content: flex-start;
-  font-weight: bold;
-}
-
 /* Dialogs */
 body[data-skin='icq'] .dialog {
   background: var(--face);
@@ -201,3 +88,8 @@ body[data-skin='icq'] .dialog input {
   box-shadow: var(--bevel-in);
   padding: 4px 5px;
 }
+
+body[data-skin='icq'] .icq-menubar { display: flex; gap: 3px; padding: 3px 4px; }
+body[data-skin='icq'] .btn98, body[data-skin='icq'] .dialog .btn { font: inherit; min-height: 21px; padding: 2px 8px; border: 0; background: var(--face); box-shadow: var(--bevel-out); }
+body[data-skin='icq'] .btn98:active, body[data-skin='icq'] .dialog .btn:active { box-shadow: var(--bevel-in); }
+body[data-skin='icq'] .btn98:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }

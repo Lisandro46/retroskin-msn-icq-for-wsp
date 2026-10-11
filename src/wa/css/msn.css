@@ -168,10 +168,10 @@ html[data-skin='msn'] header [data-testid='wa-wordmark'] {
 }
 html[data-skin='msn'] header[data-testid='chatlist-header'] h2::before {
   content: 'Contactos';
-  font: bold 15px Tahoma, sans-serif;
+  font: bold 11px Tahoma, sans-serif;
   color: var(--msn-blue);
-  padding-left: 26px;
-  background: var(--wm-msn-logo) left center / 22px no-repeat;
+  padding-left: 20px;
+  background: var(--wm-msn-logo) left center / 16px no-repeat;
 }
 html[data-skin='msn'] header[data-testid='chatlist-header'] button {
   color: var(--msn-blue) !important;
@@ -209,10 +209,10 @@ html[data-skin='msn'] #side [role='tablist'] button[aria-selected='true'] {
 
 /* Contact rows */
 html[data-skin='msn'] [data-testid='chat-list']::before {
-  content: '\25BE  Conectado';
+  content: none;
   display: block;
   padding: 6px 12px 2px;
-  font: bold 13px Tahoma, sans-serif;
+  font: bold 11px Tahoma, sans-serif;
   color: var(--msn-blue);
 }
 html[data-skin='msn'] #pane-side [data-testid='cell-frame-container'] {
@@ -226,7 +226,7 @@ html[data-skin='msn'] #pane-side [role='row']:has([aria-selected='true']) [data-
   box-shadow: inset 0 0 0 1px #7fa1d8;
 }
 html[data-skin='msn'] [data-wm-role='avatar'] {
-  background: var(--wm-msn-buddy) center / 30px no-repeat !important;
+  background: var(--wm-msn-contact) center / 16px no-repeat !important;
 }
 html[data-skin='msn'] [data-wm-row='group'] [data-wm-role='avatar'] {
   background-image: var(--wm-msn-group) !important;
@@ -258,7 +258,7 @@ html[data-skin='msn'] [data-testid='icon-unread-count'] {
 html[data-skin='msn'] #main [data-testid^='conversation-background'] {
   background: #fff !important;
 }
-html[data-skin='msn'] #main [data-testid^='conversation-background'] > * {
+html[data-skin='msn'] #main [data-testid^='conversation-background'] > :is(img, svg, canvas) {
   display: none !important;
 }
 html[data-skin='msn'] [data-testid='conversation-header'] {
@@ -314,7 +314,7 @@ html[data-skin='msn'] [data-wm-first='1']::before {
   display: block;
   margin: 10px 0 1px 12px;
   color: #6d6d6d;
-  font: 13px Tahoma, sans-serif;
+  font: 12px Tahoma, sans-serif;
 }
 /* Groups: WhatsApp already prints the author (next to their picture). */
 html[data-skin='msn'] [data-wm-msg]:has([data-testid='author'])::before {
@@ -380,3 +380,8 @@ html[data-skin='msn'] ::-webkit-scrollbar-thumb {
   border: 1px solid #8da9de !important;
   border-radius: 3px !important;
 }
+
+html[data-skin='msn'] #pane-side [data-testid='cell-frame-title'] { font-size: 11px !important; }
+html[data-skin='msn'] #pane-side [data-testid='cell-frame-secondary'] { font-size: 10px !important; }
+html[data-skin='msn'] #side header h2 { font-size: 0 !important; }
+html[data-skin='msn'] [data-testid='conversation-info-header-chat-title'] { font-size: 11px !important; }

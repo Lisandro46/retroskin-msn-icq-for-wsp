@@ -57,159 +57,9 @@ body[data-skin='msn'] .menubar button:hover {
   color: #fff;
 }
 
-/* Body: vertical tabs + panel */
-body[data-skin='msn'] .msn-body {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  background: linear-gradient(180deg, #fafdff 0%, #e1ecfb 40%, #c7daf5 100%);
-}
-body[data-skin='msn'] .msn-tabs {
-  width: 32px;
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding-top: 8px;
-  background: linear-gradient(90deg, #b9d1f2, #dbe8fa);
-  border-right: 1px solid #9ebbe6;
-}
-body[data-skin='msn'] .msn-tabs span {
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px 0 0 4px;
-  margin-right: -2px;
-}
-body[data-skin='msn'] .msn-tabs span.on {
-  background: #fafdff;
-  border: 1px solid #9ebbe6;
-  border-right: 0;
-}
-body[data-skin='msn'] .msn-panel {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Profile header */
-body[data-skin='msn'] .msn-profile {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px 10px 6px;
-  background: linear-gradient(180deg, #e9f2fd, #c9dcf6);
-  border-bottom: 1px solid #a5c0e8;
-}
-body[data-skin='msn'] .msn-pic {
-  width: 50px;
-  height: 50px;
-  flex: none;
-  padding: 2px;
-  background: #fff;
-  border: 1px solid #7fa1d8;
-  border-radius: 5px;
-  box-shadow: 0 1px 2px rgba(0, 40, 120, 0.25);
-}
-body[data-skin='msn'] .msn-pic img {
-  width: 100%;
-  height: 100%;
-  border-radius: 3px;
-  object-fit: cover;
-  display: block;
-}
-body[data-skin='msn'] .msn-info {
-  flex: 1;
-  min-width: 0;
-  padding-top: 3px;
-}
-body[data-skin='msn'] .msn-nickline {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  font-size: 13px;
-  font-weight: bold;
-  color: #000;
-}
-body[data-skin='msn'] .msn-nick {
-  max-width: 60%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  padding: 0 2px;
-  border: 1px solid transparent;
-}
-body[data-skin='msn'] .msn-nick:hover,
-body[data-skin='msn'] .msn-pm:hover,
-body[data-skin='msn'] [data-edit]:focus {
-  border-color: #7fa1d8;
-  background: #fff;
-}
-body[data-skin='msn'] .msn-status {
-  border: 0;
-  background: none;
-  font-weight: normal;
-  font-size: 11px;
-  color: #000;
-  padding: 0 2px;
-}
-body[data-skin='msn'] .msn-status:hover {
-  text-decoration: underline;
-}
-body[data-skin='msn'] .msn-pm {
-  margin-top: 4px;
-  padding: 1px 2px;
-  color: #3a3a3a;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 420px;
-}
-body[data-skin='msn'] .msn-pm:empty::before {
-  color: #6d7f9c;
-}
-body[data-skin='msn'] .msn-mail {
-  color: #1d4f9e;
-  padding-top: 4px;
-}
-
-/* Search strip */
-body[data-skin='msn'] .msn-search {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 5px 10px;
-  height: 22px;
-  padding: 0 4px 0 8px;
-  background: #fff;
-  border: 1px solid #9ab3dc;
-  border-radius: 3px;
-  color: #8a96a8;
-  font-style: italic;
-}
-body[data-skin='msn'] .msn-search span {
-  flex: 1;
-}
-body[data-skin='msn'] .msn-search button {
-  display: flex;
-  border: 1px solid transparent;
-  background: none;
-  border-radius: 2px;
-  padding: 1px 3px;
-}
-body[data-skin='msn'] .msn-search button:hover {
-  border-color: #9ab3dc;
-  background: #eef4fd;
-}
-
 body[data-skin='msn'] #content {
-  margin: 0 6px;
-  border: 1px solid #9ab3dc;
+  margin: 0;
+  border: 0;
   background: #fff;
 }
 body[data-skin='msn'] .loading {
@@ -223,45 +73,6 @@ body[data-skin='msn'] .loading .spin {
 @keyframes msn-spin {
   from { transform: rotateY(0); }
   to { transform: rotateY(360deg); }
-}
-
-/* Fake banner ad */
-body[data-skin='msn'] .msn-ad {
-  height: 66px;
-  flex: none;
-  margin: 6px auto 6px;
-  width: min(468px, calc(100% - 12px));
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 12px;
-  border: 1px solid #7fa1d8;
-  background: linear-gradient(90deg, #ffef7a, #ffb52e);
-  color: #7a1b00;
-  overflow: hidden;
-}
-body[data-skin='msn'] .msn-ad .ad-art {
-  animation: msn-bounce 1s ease-in-out infinite alternate;
-  display: flex;
-}
-body[data-skin='msn'] .msn-ad .ad-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-body[data-skin='msn'] .msn-ad b {
-  font-size: 14px;
-}
-body[data-skin='msn'] .msn-ad span {
-  color: #0033cc;
-  text-decoration: underline;
-  animation: msn-blink 1s steps(2) infinite;
-}
-@keyframes msn-bounce {
-  to { transform: translateY(-5px) rotate(-8deg); }
-}
-@keyframes msn-blink {
-  50% { color: #d40000; }
 }
 
 /* Dialogs */
@@ -282,3 +93,5 @@ body[data-skin='msn'] .dialog .btn {
   border-radius: 3px;
   background: linear-gradient(180deg, #fff, #ecebe6 86%, #d6d0c5);
 }
+
+body[data-skin='msn'] .tbtns button:active { filter: brightness(.9); }

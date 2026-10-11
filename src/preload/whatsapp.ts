@@ -7,6 +7,7 @@
 import { ipcRenderer } from 'electron'
 import { NUDGE_TEXT, type Settings, type SkinId, type WaState } from '@shared/types'
 import { icqFlower, msnLogo, nudgeIcon, samplePicture, smileyIcon, svgUrl } from '@shared/icons'
+import { sidebarProfile, sidebarFooter, sidebarTools } from '@shared/sidebar'
 import { buttonWithIcon, first, hasIcon, ICON, ONLINE_RE, PRE_PLAIN_RE, SEL, TYPING_RE } from '@wa/selectors'
 
 let settings: Settings | undefined
@@ -21,6 +22,7 @@ ipcRenderer.on('wa:settings', (_event, next: Settings) => {
   settings = next
   applySkin()
   if (skinChanged) buildOverlay()
+  syncSidebar()
   tick()
 })
 ipcRenderer.on('wa:send-nudge', () => void sendNudge())
@@ -43,6 +45,9 @@ const setData = (el: HTMLElement, key: string, value: string): void => {
 /* ----------------------------------------------------------------- overlay */
 
 let overlay: HTMLElement | undefined
+let sidebarFingerprint = ''
+let layoutObserver: ResizeObserver | undefined
+let observedLayout: Element[] = []
 const part = <T extends HTMLElement = HTMLElement>(id: string): T | null =>
   overlay?.querySelector<T>(`#${id}`) ?? null
 
@@ -51,6 +56,7 @@ function buildOverlay(): void {
   overlay?.remove()
   overlay = document.createElement('div')
   overlay.id = 'wm-root'
+  sidebarFingerprint = ''
   const s = skin()
   if (s === 'off') {
     overlay.innerHTML = `<div id="wm-bar" class="wm-off"><button id="wm-nudge" title="Enviar un zumbido (Ctrl+G)">${nudgeIcon(16)}</button></div>`
@@ -70,14 +76,17 @@ function buildOverlay(): void {
   } else {
     overlay.innerHTML = `
       <div id="wm-login"><span class="wm-logo">${icqFlower('logo', 44)}</span>
-        <div><b>ICQ Login</b><span>Scan the code with WhatsApp on your phone to connect to the ICQ Network.</span></div></div>
+        <div><b>ICQ Login</b><span>Scan the code with WhatsApp on your phone to link WhatsApp. Your ICQ details stay local.</span></div></div>
       <div id="wm-bar">
-        <button id="wm-nudge" title="Enviar un zumbido (Ctrl+G)">${icqFlower('ffc', 16)} Zumbido!</button>
+
         <span id="wm-status"></span>
         <button id="wm-send" title="Send (Enter)">Send</button>
       </div>`
   }
+  if (s !== 'off') overlay.insertAdjacentHTML('afterbegin', `<section id="wm-profile"></section><footer id="wm-side-footer"></footer><div id="wm-chat-title"></div>${s === 'icq' ? `<nav id="wm-side-tools" aria-label="ICQuick">${sidebarTools()}</nav>` : ''}`)
   document.body.appendChild(overlay)
+  bindSidebar()
+  syncSidebar()
   // Toolbar buttons must not steal focus from WhatsApp's composer.
   overlay.addEventListener('mousedown', (event) => {
     if ((event.target as HTMLElement).closest('button')) event.preventDefault()
@@ -97,25 +106,101 @@ function notice(text: string): void {
   tick()
 }
 
+
+function syncSidebar(): void {
+  if (!settings || skin() === 'off') return
+  const profile = part('wm-profile')
+  const footer = part('wm-side-footer')
+  const fingerprint = JSON.stringify(settings)
+  if (fingerprint === sidebarFingerprint || profile?.contains(document.activeElement)) return
+  if (profile) profile.innerHTML = sidebarProfile(settings)
+  if (footer) footer.innerHTML = sidebarFooter(settings)
+  const img = part<HTMLImageElement>('wm-profile-pic')
+  if (img) {
+    img.src = ownPicture() || svgUrl(samplePicture(96))
+    img.onerror = () => { img.onerror = null; img.src = svgUrl(samplePicture(96)) }
+  }
+  sidebarFingerprint = fingerprint
+}
+
+function bindSidebar(): void {
+  overlay?.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement
+    if (target.closest('[data-wm-action="search"]')) return focusSearch()
+    const button = target.closest<HTMLElement>('[data-wm-menu]')
+    if (!button) return
+    const r = button.getBoundingClientRect()
+    ipcRenderer.send('wa:menu', {
+      menu: button.dataset.wmMenu, x: r.left,
+      y: button.closest('#wm-side-footer') ? r.top : r.bottom
+    })
+  })
+  overlay?.addEventListener('keydown', (event) => {
+    const field = (event.target as HTMLElement).closest<HTMLElement>('[data-wm-edit]')
+    if (!field || !settings) return
+    // Editing local nick/PM must not send a chat message or a zumbido.
+    event.stopPropagation()
+    if (event.key === 'Enter') { event.preventDefault(); field.blur() }
+    if (event.key === 'Escape') {
+      field.textContent = String(settings[field.dataset.wmEdit as keyof Settings] ?? '')
+      field.blur()
+    }
+  })
+  overlay?.addEventListener('focusout', (event) => {
+    const field = (event.target as HTMLElement).closest<HTMLElement>('[data-wm-edit]')
+    if (!field || !settings) return
+    const key = field.dataset.wmEdit as 'nick' | 'personalMessage' | 'uin'
+    let value = (field.textContent ?? '').replace(/\s+/g, ' ').trim()
+    if (key === 'uin') value = value.replace(/\D/g, '').slice(0, 12) || settings.uin
+    if (key === 'nick') value = value.slice(0, 80) || settings.nick
+    if (key === 'personalMessage') value = value.slice(0, 120)
+    field.textContent = value
+    if (value !== settings[key]) ipcRenderer.send('wa:profile-edit', { [key]: value })
+  })
+}
+
 function placeOverlay(): void {
   if (!overlay) return
   const main = document.querySelector<HTMLElement>(SEL.main)
   const footer = document.querySelector<HTMLElement>(SEL.footer)
-  const visible = state === 'ready' && !!main && !!footer
+  const side = document.querySelector<HTMLElement>(SEL.side)
+  const layoutNodes = [side, main, footer, document.querySelector(SEL.header)].filter((el): el is HTMLElement => el instanceof HTMLElement)
+  if (layoutObserver && (layoutNodes.length !== observedLayout.length || layoutNodes.some((node, i) => node !== observedLayout[i]))) {
+    layoutObserver.disconnect()
+    layoutNodes.forEach(node => layoutObserver?.observe(node))
+    observedLayout = layoutNodes
+  }
+  const sideRect = side?.getBoundingClientRect()
+  const sideVisible = state === 'ready' && skin() !== 'off' && !!sideRect && sideRect.width > 0 && sideRect.height > 0
+  overlay.classList.toggle('wm-sidebar', sideVisible)
+  if (side) {
+    if (sideVisible) setData(side, 'wmSidebar', '1')
+    else delete side.dataset.wmSidebar
+  }
+  const mainRect = main?.getBoundingClientRect()
+  const footerRect = footer?.getBoundingClientRect()
+  const visible = state === 'ready' && !!mainRect && !!footerRect && mainRect.width > 0 && mainRect.height > 0 && footerRect.height > 0
   overlay.classList.toggle('wm-chat', visible)
-  if (!visible || !main || !footer) return
-  const m = main.getBoundingClientRect()
-  const f = footer.getBoundingClientRect()
-  const header = document.querySelector<HTMLElement>(SEL.header)
-  const vars: Record<string, number> = {
-    'main-top': m.top,
-    'main-left': m.left,
-    'main-width': m.width,
-    'main-bottom': m.bottom,
-    'footer-top': f.top,
-    'footer-left': f.left,
-    'footer-width': f.width,
-    'header-bottom': header ? header.getBoundingClientRect().bottom : m.top
+  if (main) setData(main, 'wmChatFrame', visible && skin() !== 'off' ? '1' : '0')
+  const vars: Record<string, number> = {}
+  if (sideVisible && sideRect) Object.assign(vars, {
+    'side-top': sideRect.top, 'side-left': sideRect.left,
+    'side-width': sideRect.width, 'side-bottom': sideRect.bottom
+  })
+  if (visible && main && footer) {
+    const m = mainRect!
+    const f = footerRect!
+    const header = document.querySelector<HTMLElement>(SEL.header)
+    setData(html(), 'wmCompact', m.width < 520 ? '1' : '0')
+    Object.assign(vars, {
+      'main-top': m.top, 'main-left': m.left, 'main-width': m.width, 'main-bottom': m.bottom,
+      'footer-top': f.top, 'footer-left': f.left, 'footer-width': f.width,
+      'header-bottom': header ? header.getBoundingClientRect().bottom : m.top
+    })
+    const title = part('wm-chat-title')
+    const name = headerInfo().name
+    const caption = skin() === 'icq' ? `Message Session - ${name}` : `${name} - Conversación`
+    if (title && title.textContent !== caption) title.textContent = caption
   }
   for (const [name, value] of Object.entries(vars)) {
     const css = `${Math.round(value)}px`
@@ -358,6 +443,7 @@ function focusSearch(): void {
 window.addEventListener(
   'keydown',
   (event) => {
+    if ((event.target as HTMLElement)?.closest?.('[data-wm-edit]')) return
     if (event.ctrlKey && !event.altKey && !event.shiftKey && event.key.toLowerCase() === 'g') {
       event.preventDefault()
       event.stopPropagation()
@@ -408,6 +494,10 @@ function tick(): void {
   }
   if (state === 'login') markLogin()
   if (state === 'ready') {
+    syncSidebar()
+    const profileImg = part<HTMLImageElement>('wm-profile-pic')
+    const own = ownPicture() || svgUrl(samplePicture(96))
+    if (profileImg && profileImg.getAttribute('src') !== own) profileImg.src = own
     updateConversation()
     watchChatList()
     const pic = ownPicture() || null
@@ -430,6 +520,7 @@ const schedule = (): void => {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  layoutObserver = new ResizeObserver(schedule)
   ipcRenderer.send('wa:hello')
   tick()
   new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true })

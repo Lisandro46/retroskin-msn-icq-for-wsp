@@ -69,7 +69,7 @@ html[data-skin='icq'] #wm-bar button {
   height: 23px;
   padding: 0 8px;
   border: 0;
-  background: linear-gradient(180deg, #fff3a0, #f7d732 60%, #e3b800);
+  background: var(--icq-face);
   box-shadow: var(--icq-bevel-out);
   font-weight: bold;
   color: #000;
@@ -98,7 +98,7 @@ html[data-skin='icq'] [data-testid='wa-web-main-screen'] > div {
 html[data-skin='icq'] #side,
 html[data-skin='icq'] #side > div,
 html[data-skin='icq'] #pane-side {
-  background-color: #fff !important;
+  background-color: #d4d0c8 !important;
 }
 html[data-skin='icq'] #side {
   box-shadow: var(--icq-bevel-in);
@@ -127,11 +127,11 @@ html[data-skin='icq'] header [data-testid='wa-wordmark'] {
   display: none !important;
 }
 html[data-skin='icq'] header[data-testid='chatlist-header'] h2::before {
-  content: 'Contact List';
-  font: bold 14px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  content: 'My Contact List';
+  font: bold 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
   color: #000;
-  padding-left: 24px;
-  background: var(--wm-icq-online) left center / 20px no-repeat;
+  padding-left: 20px;
+  background: var(--wm-icq-contact) left center / 16px no-repeat;
 }
 html[data-skin='icq'] header[data-testid='chatlist-header'] button {
   color: #000 !important;
@@ -172,12 +172,12 @@ html[data-skin='icq'] #side [role='tablist'] button[aria-selected='true'] {
   font-weight: bold !important;
 }
 
-/* Contact rows: flowers, Online group */
+/* Contact rows: flowers; presence unavailable */
 html[data-skin='icq'] [data-testid='chat-list']::before {
-  content: 'Online';
+  content: none;
   display: block;
   padding: 4px 10px 2px;
-  font: bold 13px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: bold 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
   color: #0000c0;
 }
 html[data-skin='icq'] #pane-side [data-testid='cell-frame-container'] {
@@ -191,7 +191,7 @@ html[data-skin='icq'] #pane-side [role='row']:has([aria-selected='true']) [data-
   color: #fff !important;
 }
 html[data-skin='icq'] [data-wm-role='avatar'] {
-  background: var(--wm-icq-online) center / 26px no-repeat !important;
+  background: var(--wm-icq-contact) center / 16px no-repeat !important;
 }
 html[data-skin='icq'] [data-wm-row='group'] [data-wm-role='avatar'] {
   background-image: var(--wm-icq-group) !important;
@@ -228,7 +228,7 @@ html[data-skin='icq'] #main {
 html[data-skin='icq'] #main [data-testid^='conversation-background'] {
   background: #fff !important;
 }
-html[data-skin='icq'] #main [data-testid^='conversation-background'] > * {
+html[data-skin='icq'] #main [data-testid^='conversation-background'] > :is(img, svg, canvas) {
   display: none !important;
 }
 html[data-skin='icq'] [data-testid='conversation-panel-body'] {
@@ -243,7 +243,7 @@ html[data-skin='icq'] [data-testid='conversation-header'] img {
   border-radius: 0 !important;
 }
 html[data-skin='icq'] [data-testid='conversation-info-header-chat-title']::before {
-  content: 'Message Session - ';
+  content: 'To: ';
   font-weight: normal;
   color: #444;
 }
@@ -279,7 +279,8 @@ html[data-skin='icq'] [data-wm-msg] [data-testid='selectable-text'] {
   color: #000 !important;
 }
 html[data-skin='icq'] [data-wm-msg] [data-testid='msg-meta'] {
-  display: none !important;
+  opacity: 0.65;
+  font-size: 10px !important;
 }
 html[data-skin='icq'] [data-wm-first='1']::before,
 html[data-skin='icq'] [data-wm-msg]:not([data-wm-first='1'])::before {
@@ -287,7 +288,7 @@ html[data-skin='icq'] [data-wm-msg]:not([data-wm-first='1'])::before {
   display: block;
   margin: 6px 0 0 10px;
   color: #c00000;
-  font: bold 13px 'Microsoft Sans Serif', Tahoma, sans-serif;
+  font: bold 11px 'Microsoft Sans Serif', Tahoma, sans-serif;
 }
 html[data-skin='icq'] [data-wm-msg='out']::before {
   color: #0000c0 !important;
@@ -352,4 +353,13 @@ html[data-skin='icq'] ::-webkit-scrollbar-thumb {
   background: var(--icq-face) !important;
   box-shadow: var(--icq-bevel-out) !important;
   border-radius: 0 !important;
+}
+
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-title'] { font-size: 11px !important; }
+html[data-skin='icq'] #pane-side [data-testid='cell-frame-secondary'] { font-size: 10px !important; }
+html[data-skin='icq'] #side header h2 { font-size: 0 !important; }
+html[data-skin='icq'] [data-testid='conversation-info-header-chat-title'] { font-size: 11px !important; }
+
+html[data-skin='icq'] #main [data-testid='conversation-compose-box-input'] {
+  background: #fff !important; border-radius: 0 !important; box-shadow: var(--icq-bevel-in);
 }

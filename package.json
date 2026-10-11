@@ -10,7 +10,8 @@
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "dist": "npm run build && electron-builder --win --publish never"
+    "dist": "npm run build && electron-builder --win --publish never",
+    "preview:retro": "node scripts/preview-retro.mjs"
   },
   "build": {
     "appId": "com.lisandro.retro-messenger",

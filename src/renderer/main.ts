@@ -2,8 +2,8 @@ import './styles/shell.css'
 import './styles/msn.css'
 import './styles/icq.css'
 import type { Settings, WaState } from '@shared/types'
-import { icqFlower, msnBuddy, samplePicture, svgUrl } from '@shared/icons'
-import { aboutDialog, adBanner, icqChrome, msnChrome, offChrome, optionsDialog } from './skins'
+import { icqFlower, msnBuddy, svgUrl } from '@shared/icons'
+import { aboutDialog, icqChrome, msnChrome, offChrome, optionsDialog } from './skins'
 import { clearSoundCache, playSound } from './sounds'
 
 const api = window.messenger
@@ -13,7 +13,6 @@ const modal = document.getElementById('modal') as HTMLElement
 let settings: Settings
 let waState: WaState = 'loading'
 let maximized = false
-let profilePic: string | null = null
 let contentObserver: ResizeObserver | undefined
 
 function render(): void {
@@ -22,20 +21,12 @@ function render(): void {
   root.innerHTML = s.skin === 'msn' ? msnChrome(s, maximized) : s.skin === 'icq' ? icqChrome(s, maximized) : offChrome(s, maximized)
   document.title = s.skin === 'msn' ? 'MSN Messenger' : s.skin === 'icq' ? 'ICQ' : 'WhatsApp'
   applyWaState()
-  applyProfilePic()
   watchContent()
   void updateIcon()
 }
 
 function applyWaState(): void {
   root.dataset.wa = waState
-}
-
-function applyProfilePic(): void {
-  const img = document.getElementById('own-pic') as HTMLImageElement | null
-  if (!img) return
-  img.src = profilePic ?? svgUrl(samplePicture(96))
-  img.onerror = () => (img.src = svgUrl(samplePicture(96)))
 }
 
 /** Tell the main process where WhatsApp goes. */
@@ -86,29 +77,6 @@ root.addEventListener('dblclick', (event) => {
   if ((event.target as HTMLElement).closest('.titlebar') && !(event.target as HTMLElement).closest('button')) {
     api.windowControl('maximize')
   }
-})
-
-// Inline editing of nick, personal message and ICQ#.
-root.addEventListener('keydown', (event) => {
-  const field = (event.target as HTMLElement).closest<HTMLElement>('[data-edit]')
-  if (!field) return
-  if (event.key === 'Enter') {
-    event.preventDefault()
-    field.blur()
-  } else if (event.key === 'Escape') {
-    field.textContent = String(settings[field.dataset.edit as keyof Settings] ?? '')
-    field.blur()
-  }
-})
-root.addEventListener('focusout', (event) => {
-  const field = (event.target as HTMLElement).closest<HTMLElement>('[data-edit]')
-  if (!field) return
-  const key = field.dataset.edit as 'nick' | 'personalMessage' | 'uin'
-  let value = (field.textContent ?? '').replace(/\s+/g, ' ').trim()
-  if (key === 'uin') value = value.replace(/\D/g, '').slice(0, 12) || settings.uin
-  if (key === 'nick' && !value) value = settings.nick
-  field.textContent = value
-  if (value !== settings[key]) api.setSettings({ [key]: value })
 })
 
 /* ---------------------------------------------------------------- dialogs */
@@ -168,17 +136,6 @@ api.onMaximized((value) => {
   render()
 })
 api.onDialog(openDialog)
-api.onProfilePic((url) => {
-  profilePic = url
-  applyProfilePic()
-})
-
-// The fake MSN ad rotates every 30 s.
-let adIndex = 0
-setInterval(() => {
-  const ad = document.getElementById('ad')
-  if (ad) ad.innerHTML = adBanner(++adIndex)
-}, 30_000)
 
 void api.getSettings().then((s) => {
   settings = s

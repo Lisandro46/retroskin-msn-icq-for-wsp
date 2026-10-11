@@ -21,12 +21,12 @@ Requisitos: Windows 10 u 11 (64 bits) y WhatsApp en tu teléfono. Para desinstal
 
 | | MSN Messenger 7.5 | ICQ 2000b |
 |---|---|---|
-| Ventana | Marco azul de Windows XP, menú Archivo / Contactos / Acciones / Herramientas / Ayuda | Gris Windows 98 con relieve, botones amarillos **Main** y **Services** |
-| Vos | Foto, nick editable, `(Conectado) ▾`, `<Escribe un mensaje personal>` | **ICQ#** y nick editables, estado con florcita (Online, Away, N/A, Occupied, DND, Free For Chat, Invisible) |
-| Lista de chats | "Contactos", muñequitos verdes, grupo "Conectado", contador naranja | "Contact List", florcitas, grupo "Online", notita amarilla que titila cuando hay mensajes |
-| Conversación | Sin globos, **"Juan dice:"**, fotos a la derecha, barra Fuente / Emoticonos / **Zumbido** / Enviar, "Juan está escribiendo un mensaje..." | **"Juan (19:05):"** en rojo y lo tuyo en azul, botón **Zumbido!** y Send |
+| Ventana | Marco azul de Windows XP, menú Archivo / Contactos / Acciones / Herramientas / Ayuda | Gris Windows 98 con relieve, controles **Main** y **Services**, ICQuick lateral y pie con estado |
+| Vos | Perfil sobre la lista: foto, nick editable, `(Conectado) ▾`, `<Escribe un mensaje personal>` | **ICQ#** y nick editables, estado con florcita (Online, Away, N/A, Occupied, DND, Free For Chat, Invisible) |
+| Lista de chats | "Contactos", íconos neutros cuando no conocemos presencia, contador naranja | "My Contact List", flores grises con presencia desconocida, nota amarilla para mensajes pendientes |
+| Conversación | Sin globos, **"Juan dice:"**, fotos a la derecha, barra Fuente / Emoticonos / **Zumbido** / Enviar, "Juan está escribiendo un mensaje..." | **"Juan (19:05):"** en rojo y lo tuyo en azul, cabecera **Message Session** y botón **Send**; zumbido disponible como extra desde menú o Ctrl+G |
 | Sonidos | "Doo-dun" de mensaje, campanita de conexión, zumbido | "Uh-oh!", toc-toc de conexión, zumbido |
-| Extras | Banner de publicidad trucha, cartelito "X dice:" abajo a la derecha | Cartelito gris Win98 |
+| Extras | Banner de publicidad ficticia limitado al pie de contactos, cartelito "X dice:" abajo a la derecha | Cartelito gris Win98 |
 
 Además: skin **WhatsApp original** (con un botoncito de zumbido flotante), ícono en la bandeja y parpadeo en la barra de tareas.
 
@@ -47,6 +47,7 @@ El nick, el mensaje personal, el estado y el ICQ# son decorativos: se guardan en
 ```bash
 npm install
 npm run dev        # app en modo desarrollo
+npm run preview:retro  # revisión visual local con datos ficticios, puerto 4173
 npm run typecheck
 npm run dist       # instalador y portable en dist/
 ```
@@ -56,10 +57,12 @@ Para publicar una versión: `git tag v0.1.0 && git push origin v0.1.0` y GitHub 
 ### Cómo está hecho
 
 - `src/main` — ventana sin marco de Electron + un `WebContentsView` que carga web.whatsapp.com (con User-Agent de Chrome y sesión persistente), sacudida, bandeja y avisos.
-- `src/renderer` — el marco de cada skin (barra de título, menús, cabecera, banner) y los sonidos sintetizados con WebAudio.
-- `src/preload/whatsapp.ts` — corre dentro de WhatsApp: marca nodos con `data-wm-*`, dibuja la barra del zumbido y detecta zumbidos y mensajes nuevos.
+- `src/renderer` — el marco de cada skin (barra de título y menús) y los sonidos sintetizados con WebAudio.
+- `src/preload/whatsapp.ts` — corre dentro de WhatsApp: marca nodos con `data-wm-*`, dibuja perfil y pie sobre la lista, cabecera y herramientas sobre la conversación; detecta zumbidos y mensajes nuevos.
 - `src/wa/selectors.ts` — **todas** las referencias al HTML de WhatsApp (ids, roles, `data-testid`). WhatsApp cambia seguido: si algo deja de verse bien, se arregla ahí.
 - `src/wa/css` — las skins aplicadas sobre WhatsApp.
+
+La vista de prueba usa las plantillas, estilos y preload reales sobre un DOM sintético. No se conecta a WhatsApp ni prueba la compatibilidad con su DOM actual. Ver [registro de la primera etapa](docs/ETAPA_1_FIDELIDAD.md) y [plan completo](docs/PLAN_FIDELIDAD_RETRO.md).
 
 ## Licencia
 
