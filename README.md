@@ -38,11 +38,24 @@ Requisitos: macOS 12 o más nuevo.
 
 ### Linux
 
-Entrá a la [última versión](https://github.com/Lisandro46/retroskin-msn-icq-for-wsp/releases/latest) y elegí:
+Elegí el formato según tu distribución:
 
-- **AppImage** (cualquier distro, sin instalar): `chmod +x Retro-Messenger-linux-*.AppImage` y abrilo con doble clic. Si no arranca, instalá `libfuse2` (Ubuntu/Debian: `sudo apt install libfuse2`).
-- **.deb** (Ubuntu, Debian, Mint): `sudo apt install ./Retro-Messenger-linux-*.deb`
-- **.rpm** (Fedora, openSUSE): `sudo dnf install ./Retro-Messenger-linux-*.rpm`
+- ⬇️ [**.deb**](https://github.com/Lisandro46/retroskin-msn-icq-for-wsp/releases/latest/download/Retro-Messenger-linux-amd64.deb) — Ubuntu, Debian, Mint, Pop!_OS. Instalalo con doble clic o desde la terminal, en la carpeta de descargas:
+  ```bash
+  sudo apt install ./Retro-Messenger-linux-amd64.deb
+  ```
+- ⬇️ [**.rpm**](https://github.com/Lisandro46/retroskin-msn-icq-for-wsp/releases/latest/download/Retro-Messenger-linux-x86_64.rpm) — Fedora, openSUSE:
+  ```bash
+  sudo dnf install ./Retro-Messenger-linux-x86_64.rpm
+  ```
+- ⬇️ [**AppImage**](https://github.com/Lisandro46/retroskin-msn-icq-for-wsp/releases/latest/download/Retro-Messenger-linux-x86_64.AppImage) — cualquier distro, sin instalar nada:
+  ```bash
+  chmod +x Retro-Messenger-linux-x86_64.AppImage
+  ./Retro-Messenger-linux-x86_64.AppImage
+  ```
+  Si no arranca, falta `libfuse2` (Ubuntu 22.04: `sudo apt install libfuse2`; en 24.04: `sudo apt install libfuse2t64`). Si en Ubuntu 24.04 se cierra con un error de "sandbox", abrila con `./Retro-Messenger-linux-x86_64.AppImage --no-sandbox` o usá el .deb, que no tiene ese problema.
+
+Con .deb o .rpm aparece como **Retro Messenger para WhatsApp** en el menú de aplicaciones. Después escaneá el QR igual que en Windows (paso 3). Requisitos: Linux de 64 bits (x86_64).
 
 La bandeja del sistema necesita soporte de AppIndicator (en GNOME, la extensión "AppIndicator and KStatusNotifierItem Support").
 
