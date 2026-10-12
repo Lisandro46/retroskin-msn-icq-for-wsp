@@ -257,6 +257,10 @@ html[data-skin='msn'] [data-testid='icon-unread-count'] {
 /* ========================================================= conversation */
 html[data-skin='msn'] #main [data-testid^='conversation-background'] {
   background: #fff !important;
+  /* WhatsApp draws its doodle as a mask over this layer, at reduced opacity. */
+  -webkit-mask: none !important;
+  mask: none !important;
+  opacity: 1 !important;
 }
 html[data-skin='msn'] #main [data-testid^='conversation-background'] > :is(img, svg, canvas) {
   display: none !important;

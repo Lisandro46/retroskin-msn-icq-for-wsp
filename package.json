@@ -1,6 +1,6 @@
 {
   "name": "retro-messenger-whatsapp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "WhatsApp Web vestido de MSN Messenger 7.5 o ICQ 2000b (solo estético)",
   "main": "out/main/index.js",
   "author": {
