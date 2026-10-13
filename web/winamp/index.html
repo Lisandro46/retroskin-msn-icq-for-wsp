@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Winamp Remote — El Winamp de siempre con TIDAL y YouTube Music | TrincherAI</title>
+  <meta name="description" content="Winamp Remote: un Winamp 2 de verdad para escuchar YouTube Music o manejar TIDAL. Skins clásicos, Milkdrop a pantalla completa, ecualizador de 10 bandas. Gratis y de código abierto para Windows.">
+  <meta name="theme-color" content="#000000">
+  <link rel="canonical" href="https://retro.trincherai.com/winamp/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_AR">
+  <meta property="og:url" content="https://retro.trincherai.com/winamp/">
+  <meta property="og:title" content="Winamp Remote — El Winamp de siempre, con TIDAL y YouTube Music">
+  <meta property="og:description" content="Skins clásicos, Milkdrop y el ecualizador de 10 bandas. Gratis para Windows.">
+  <meta property="og:image" content="https://retro.trincherai.com/assets/winamp/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://retro.trincherai.com/assets/winamp/og.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png">
+  <link rel="apple-touch-icon" href="/assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #000;
+      --surface: rgba(255,255,255,0.04);
+      --surface-2: rgba(255,255,255,0.07);
+      --border: #1b1b1e;
+      --border-2: #2a2a2e;
+      --orange: #FF6B2C;
+      --orange-soft: rgba(255,107,44,0.10);
+      --white: #F5F5F7;
+      --gray: #9a9aa0;
+      --gray-dim: #5a5a60;
+      --font-head: 'Space Grotesk', -apple-system, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      /* Winamp 2 base skin */
+      --wa-green: #00e000;
+      --wa-panel: #282840;
+      --wa-dark: #0a0a14;
+    }
+    html { scroll-behavior: smooth; background: var(--bg); -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-body); font-size: 17px; line-height: 1.65; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    ::selection { background: var(--orange); color: #000; }
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+    code, kbd { font-family: Consolas, 'SF Mono', Menlo, monospace; font-size: 0.88em; background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 5px; padding: 1px 6px; }
+    kbd { border-bottom-width: 2px; white-space: nowrap; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--orange); margin-bottom: 18px; }
+    h1, h2, h3 { font-family: var(--font-head); line-height: 1.1; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(30px, 4.4vw, 44px); margin-bottom: 16px; }
+    h3 { font-size: 20px; margin-bottom: 8px; }
+    section { padding: 96px 0; border-top: 1px solid var(--border); }
+    section, .hero { scroll-margin-top: 64px; }
+    .lead { font-size: 19px; color: var(--gray); max-width: 680px; }
+    .muted { color: var(--gray); }
+    .link { color: var(--white); border-bottom: 1px solid var(--gray-dim); }
+    .link:hover { border-color: var(--orange); }
+
+    /* ─── Nav ─── */
+    nav { position: sticky; top: 0; z-index: 50; background: rgba(0,0,0,0.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-weight: 700; font-size: 18px; white-space: nowrap; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 6px; background: linear-gradient(135deg, #ffb400, #ff6b2c); display: grid; place-items: center; color: #000; font-size: 15px; font-weight: 800; }
+    .nav-links { display: flex; align-items: center; gap: 24px; font-size: 15px; color: var(--gray); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-trinch { color: var(--orange) !important; font-weight: 600; }
+    @media (max-width: 860px) { .nav-links a:not(.nav-trinch) { display: none; } }
+
+    /* ─── Hero ─── */
+    .hero { padding: 72px 0 88px; border-top: 0; position: relative; }
+    .hero::before { content: ''; position: absolute; inset: -120px 0 auto; height: 620px; background: radial-gradient(ellipse 60% 55% at 72% 30%, rgba(255,107,44,0.16), transparent 70%); pointer-events: none; }
+    .hero-top { position: relative; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 48px; align-items: end; margin-bottom: 44px; }
+    .hero h1 { font-size: clamp(40px, 6vw, 66px); margin-bottom: 20px; }
+    .hero h1 em { font-style: normal; color: var(--orange); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; padding: 15px 24px; transition: transform .15s, background .15s, border-color .15s; cursor: pointer; border: 0; font: inherit; font-weight: 600; text-align: center; }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--orange); color: #000; font-size: 18px; }
+    .btn-primary:hover { background: #ff7d45; }
+    .btn-ghost { border: 1px solid var(--border-2); color: var(--white); background: var(--surface); }
+    .btn-ghost:hover { border-color: var(--gray-dim); background: var(--surface-2); }
+    .btn svg { width: 20px; height: 20px; flex: none; }
+    .download-main { display: flex; flex-wrap: wrap; gap: 12px; }
+    .download-note { margin-top: 14px; font-size: 14px; color: var(--gray); }
+    .download-note a { color: var(--white); border-bottom: 1px solid var(--gray-dim); }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .badge { font-size: 13px; color: var(--gray); border: 1px solid var(--border-2); border-radius: 99px; padding: 4px 12px; }
+
+    .shot-tabs { position: relative; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .shot-tabs button { font: inherit; font-size: 14px; font-weight: 600; color: var(--gray); background: var(--surface); border: 1px solid var(--border-2); border-radius: 8px; padding: 6px 14px; cursor: pointer; }
+    .shot-tabs button[aria-selected="true"] { color: #000; background: var(--orange); border-color: var(--orange); }
+    .shot-frame { position: relative; border-radius: 8px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.75), 0 0 0 1px var(--border-2); background: #08080c; }
+    .shot-frame img { width: 100%; }
+    .shot-caption { margin-top: 10px; font-size: 13px; color: var(--gray-dim); }
+
+    /* ─── Cards ─── */
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 40px; }
+    .cards.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card { background: var(--surface); border: 1px solid var(--border-2); border-radius: 14px; padding: 24px; }
+    .card p, .card li { color: var(--gray); font-size: 15.5px; }
+    .card .k { font-size: 26px; margin-bottom: 10px; }
+    .card ul { list-style: none; display: grid; gap: 8px; margin-top: 12px; }
+    .card li { padding-left: 18px; position: relative; }
+    .card li::before { content: '›'; position: absolute; left: 0; color: var(--orange); font-weight: 700; }
+    .card .pill { display: inline-block; font-size: 12px; font-weight: 600; color: var(--orange); border: 1px solid rgba(255,107,44,0.4); border-radius: 99px; padding: 2px 10px; margin-bottom: 12px; }
+
+    /* ─── Comparison table ─── */
+    .table-wrap { overflow-x: auto; margin-top: 28px; border: 1px solid var(--border-2); border-radius: 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: 15.5px; min-width: 560px; }
+    th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { font-family: var(--font-head); font-size: 15px; color: var(--white); background: var(--surface); }
+    td { color: var(--gray); }
+    td:first-child { color: var(--white); font-weight: 500; white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    .yes { color: #6fe08a; }
+    .no { color: var(--gray-dim); }
+
+    /* ─── Install ─── */
+    .steps { counter-reset: step; list-style: none; display: grid; gap: 16px; }
+    .steps > li { counter-increment: step; position: relative; padding-left: 44px; color: #d6d6db; }
+    .steps > li::before { content: counter(step); position: absolute; left: 0; top: 1px; width: 28px; height: 28px; border-radius: 50%; background: var(--orange-soft); border: 1px solid rgba(255,107,44,0.4); color: var(--orange); font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+    .steps strong { color: var(--white); }
+    .steps .sub { list-style: decimal; margin: 10px 0 0 20px; display: grid; gap: 6px; color: var(--gray); font-size: 15.5px; }
+    .tip { margin-top: 18px; padding: 14px 16px; border-left: 3px solid var(--orange); background: var(--orange-soft); border-radius: 0 8px 8px 0; font-size: 15px; color: #e6e6ea; }
+    .tip.warn { border-left-color: #ffcc33; background: rgba(255, 204, 51, 0.08); }
+    .install-common { margin: 36px 0 30px; }
+    .svc-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+    .svc-tabs button { font: inherit; font-weight: 600; color: var(--gray); background: var(--surface); border: 1px solid var(--border-2); border-radius: 10px; padding: 10px 18px; cursor: pointer; }
+    .svc-tabs button[aria-selected="true"] { color: #000; background: var(--orange); border-color: var(--orange); }
+    .panel { background: var(--surface); border: 1px solid var(--border-2); border-radius: 14px; padding: 28px; }
+    .panel[hidden] { display: none; }
+    .panel h3 { margin: 26px 0 12px; }
+    .panel h3:first-child { margin-top: 0; }
+
+    /* ─── Skins / Milkdrop ─── */
+    .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 48px; align-items: center; margin-top: 40px; }
+    .split img { border-radius: 8px; box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px var(--border-2); }
+    .keys { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; margin-top: 18px; font-size: 15.5px; color: var(--gray); align-items: baseline; }
+
+    /* ─── How ─── */
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chip { font-size: 13px; border: 1px solid var(--border-2); border-radius: 6px; padding: 3px 10px; color: var(--gray); }
+
+    /* ─── FAQ ─── */
+    .faq { margin-top: 36px; display: grid; gap: 10px; max-width: 820px; }
+    details { background: var(--surface); border: 1px solid var(--border-2); border-radius: 12px; padding: 0 22px; }
+    summary { cursor: pointer; list-style: none; padding: 18px 28px 18px 0; font-weight: 600; position: relative; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: '+'; position: absolute; right: 0; top: 14px; font-size: 24px; color: var(--orange); font-weight: 400; }
+    details[open] summary::after { content: '–'; }
+    details p { color: var(--gray); padding-bottom: 18px; font-size: 16px; }
+    details p + p { margin-top: -6px; }
+    details a { text-decoration: underline; }
+
+    /* ─── CTA + footer ─── */
+    .cta { text-align: center; }
+    .cta .lead { margin: 0 auto 28px; }
+    .cta-buttons { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    footer { border-top: 1px solid var(--border); padding: 40px 0 56px; color: var(--gray); font-size: 14px; }
+    .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; }
+    .foot-links { display: flex; flex-wrap: wrap; gap: 18px; }
+    .foot-links a:hover, .foot a.strong:hover { color: var(--white); }
+    .foot a.strong { color: var(--orange); font-weight: 600; }
+    .legal { margin-top: 22px; font-size: 13px; color: var(--gray-dim); max-width: 860px; }
+    .legal a { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .hero-top, .split, .cards, .cards.two { grid-template-columns: minmax(0, 1fr); }
+      section { padding: 72px 0; }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 0 16px; }
+      .btn-primary { width: 100%; }
+      .panel { padding: 20px 16px; }
+      .hero { padding-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">⚡</span>Winamp Remote</a>
+    <div class="nav-links">
+      <a href="#servicios">TIDAL o YouTube Music</a>
+      <a href="#instalar">Instalar</a>
+      <a href="#skins">Skins y Milkdrop</a>
+      <a href="#faq">Preguntas</a>
+      <a href="/">Retro Messenger</a>
+      <a class="nav-trinch" href="https://trincherai.com/">TrincherAI ↗</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ─── HERO / DESCARGA ─── -->
+  <header class="hero" id="descargar">
+    <div class="container">
+      <div class="hero-top">
+        <div>
+          <span class="tag">Un proyecto de TrincherAI · Código abierto</span>
+          <h1>El Winamp de siempre, con <em>TIDAL</em> y <em>YouTube Music</em>.</h1>
+          <p class="lead">Un Winamp 2 de verdad, con sus skins, el ecualizador de 10 bandas y Milkdrop, para escuchar tu música de hoy. Con YouTube Music suena directo desde el Winamp; con TIDAL maneja la app de escritorio.</p>
+        </div>
+        <div>
+          <div class="download-main" id="download-main">
+            <a class="btn btn-primary" data-file="Winamp-Remote-Setup.exe" href="https://github.com/Lisandro46/winamp-tidal/releases/latest">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.5v7H3zm0 13 7.5 1v-7H3zm8.5 1.2L21 21v-8.5h-9.5zm0-15.4v7.2H21V3z"/></svg>
+              Descargar para Windows
+            </a>
+          </div>
+          <p class="download-note" id="download-note">Windows 10 y 11 · también hay <a data-file="Winamp-Remote-Portable.exe" href="https://github.com/Lisandro46/winamp-tidal/releases/latest">versión portable</a> · <a href="#instalar">cómo instalarlo</a></p>
+          <div class="badges">
+            <span class="badge" id="version">Última versión</span>
+            <span class="badge">Gratis y sin cuentas nuevas</span>
+            <span class="badge">Todo queda en tu compu</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="shot-tabs" role="tablist" aria-label="Elegí una captura">
+        <button role="tab" aria-selected="true" data-shot="hero">Media Library + Milkdrop</button>
+        <button role="tab" aria-selected="false" data-shot="skins">Skins (Pioneer DEH-P80)</button>
+      </div>
+      <div class="shot-frame">
+        <img id="shot" src="/assets/winamp/hero.png" width="1320" height="480" alt="Winamp Remote con YouTube Music: la Media Library con una búsqueda de Soda Stereo, el Winamp clásico con ecualizador y playlist, y Milkdrop animado a la derecha">
+      </div>
+      <p class="shot-caption">Capturas reales de la app con YouTube Music.</p>
+    </div>
+  </header>
+
+  <!-- ─── SERVICIOS ─── -->
+  <section id="servicios">
+    <div class="container">
+      <span class="tag">Elegí tu servicio</span>
+      <h2>¿TIDAL o YouTube Music?</h2>
+      <p class="lead">La primera vez que lo abrís te pregunta cuál usás. Lo podés cambiar cuando quieras con el botón del servicio, arriba en la Media Library.</p>
+
+      <div class="cards two">
+        <div class="card">
+          <span class="pill">Recomendado para empezar</span>
+          <h3>YouTube Music</h3>
+          <p>El sonido sale del mismo Winamp: no hace falta abrir nada más.</p>
+          <ul>
+            <li>Buscás y escuchás cualquier tema, disco, artista o playlist <b>sin cuenta</b>.</li>
+            <li>Si iniciás sesión aparecen tus favoritos, playlists, álbumes, artistas y mixes («Mi supermix» y compañía).</li>
+            <li>Con YouTube Premium, sin anuncios. Sin Premium hay anuncios como en la web, y el Winamp muestra «Anuncio» mientras duran.</li>
+            <li>Al terminar un tema pasa solo al siguiente de tu playlist.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="pill">Para quien ya usa TIDAL</span>
+          <h3>TIDAL</h3>
+          <p>El Winamp funciona como control remoto de la <b>app de escritorio de TIDAL</b>, que tiene que estar abierta.</p>
+          <ul>
+            <li>Sin configurar nada: play, pausa, temas, volumen, ecualizador y visualizador sobre lo que suena en TIDAL.</li>
+            <li>Opcional: buscar en TIDAL desde el Winamp y armar tu playlist, creando gratis una «app de desarrollador» (≈3 minutos).</li>
+            <li>Tus favoritos y playlists de TIDAL todavía no aparecen: TIDAL aún no habilitó el login para apps de terceros.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th></th><th>YouTube Music</th><th>TIDAL</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>De dónde sale el sonido</td><td>Del Winamp</td><td>De la app de TIDAL</td></tr>
+            <tr><td>Buscar desde el Winamp</td><td class="yes">Sí, sin configurar nada</td><td>Sí, con tu app de desarrollador gratis</td></tr>
+            <tr><td>Tus favoritos y playlists</td><td class="yes">Sí, iniciando sesión</td><td class="no">Todavía no (depende de TIDAL)</td></tr>
+            <tr><td>Anuncios</td><td>Solo sin Premium</td><td class="yes">No</td></tr>
+            <tr><td>Reproducir un tema puntual</td><td class="yes">Al instante</td><td>Tarda unos segundos: TIDAL arranca el disco y avanza hasta el tema</td></tr>
+            <tr><td>Ecualizador, visualizador y Milkdrop</td><td class="yes">Sí</td><td class="yes">Sí (salvo con el modo exclusivo de TIDAL)</td></tr>
+            <tr><td>Cuenta necesaria</td><td>Ninguna (Google, opcional)</td><td>Una cuenta de TIDAL</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── INSTALAR ─── -->
+  <section id="instalar">
+    <div class="container">
+      <span class="tag">Instalar</span>
+      <h2>Instalalo en dos minutos.</h2>
+      <p class="lead">Es para Windows 10 u 11 de 64 bits. Los primeros pasos son iguales para los dos servicios.</p>
+
+      <ol class="steps install-common">
+        <li><strong>Bajá el instalador</strong> con el botón de arriba (<code>Winamp-Remote-Setup.exe</code>). Si no querés instalar nada, usá la <a class="link" data-file="Winamp-Remote-Portable.exe" href="https://github.com/Lisandro46/winamp-tidal/releases/latest">versión portable</a>: la abrís y listo.</li>
+        <li><strong>Abrilo.</strong> Si aparece <strong>«Windows protegió su PC»</strong>, tocá <strong>Más información → Ejecutar de todas formas</strong>. Sale porque la app no tiene firma digital (cuesta cientos de dólares por año); el instalador lo arma GitHub directamente desde el código público.</li>
+        <li><strong>Elegí tu servicio</strong> en la ventana que aparece la primera vez, y seguí los pasos de abajo.</li>
+      </ol>
+
+      <div class="svc-tabs" role="tablist" aria-label="Servicio">
+        <button role="tab" id="tab-yt" aria-controls="svc-yt" aria-selected="true" data-svc="yt">YouTube Music</button>
+        <button role="tab" id="tab-tidal" aria-controls="svc-tidal" aria-selected="false" data-svc="tidal">TIDAL</button>
+      </div>
+
+      <div class="panel" id="svc-yt" role="tabpanel" aria-labelledby="tab-yt">
+        <h3>Escuchar sin cuenta</h3>
+        <ol class="steps">
+          <li>Elegí <strong>YouTube Music</strong> y tocá <strong>Más tarde</strong>.</li>
+          <li>Apretá <kbd>J</kbd> (o <strong>+ Agregar desde YouTube Music</strong>) y buscá lo que quieras: temas, discos, artistas o playlists.</li>
+          <li><strong>▶</strong> reproduce y <strong>+</strong> lo suma a la playlist del Winamp. Un disco o playlist se abre para elegir temas, o se reproduce entero.</li>
+        </ol>
+
+        <h3>Conectar tu cuenta (favoritos, playlists y mixes)</h3>
+        <p class="muted">Hay dos formas. Probá la primera; si Google no te deja, usá la segunda.</p>
+        <ol class="steps" style="margin-top:16px">
+          <li><strong>Iniciar sesión con Google:</strong> en la Media Library tocá <strong>Iniciar sesión</strong> y entrá con tu cuenta en la ventana de Google que se abre. Cuando termina, la ventana se cierra sola.</li>
+          <li><strong>Usar la sesión de tu navegador:</strong> para cuentas que solo usan <b>llave de acceso (passkey)</b>, o si Google dice «Este navegador o app puede no ser seguro». Tocá <strong>YouTube Music…</strong> arriba en la Media Library, elegí <strong>YouTube Music</strong> y después <strong>Usar la sesión de mi navegador…</strong>
+            <ol class="sub">
+              <li>En Chrome o Edge abrí <a class="link" href="https://music.youtube.com" target="_blank" rel="noopener">music.youtube.com</a> con tu cuenta iniciada (ahí la llave de acceso sí funciona).</li>
+              <li>Apretá <kbd>F12</kbd>, andá a la pestaña <strong>Red</strong> (Network) y recargá con <kbd>F5</kbd>.</li>
+              <li>En el filtro escribí <code>browse</code> y hacé clic en el primer resultado.</li>
+              <li>En <strong>Encabezados de solicitud</strong> (Request Headers) buscá <code>cookie</code>, clic derecho → <strong>Copiar valor</strong>.</li>
+              <li>Pegalo en el Winamp y tocá <strong>Conectar</strong>.</li>
+            </ol>
+          </li>
+        </ol>
+        <p class="tip warn"><b>Ojo:</b> ese valor es tu sesión de YouTube. Queda guardado solo en tu PC, pero con él se puede entrar a tu cuenta: <b>no lo pegues en ningún otro lado ni se lo pases a nadie</b>. Si cerrás sesión en el navegador, en el Winamp también se corta y hay que volver a pegarlo.</p>
+      </div>
+
+      <div class="panel" id="svc-tidal" role="tabpanel" aria-labelledby="tab-tidal" hidden>
+        <h3>Solo control remoto (sin configurar nada)</h3>
+        <ol class="steps">
+          <li>Elegí <strong>TIDAL → Solo control remoto</strong>.</li>
+          <li>Abrí la <strong>app de escritorio de TIDAL</strong> y poné un tema. El Winamp ya lo controla: play, pausa, anterior, siguiente, posición, volumen, ecualizador y visualizador.</li>
+        </ol>
+
+        <h3>Buscar en TIDAL desde el Winamp (opcional)</h3>
+        <ol class="steps">
+          <li>Entrá a <a class="link" href="https://developer.tidal.com/dashboard" target="_blank" rel="noopener">developer.tidal.com/dashboard</a> e iniciá sesión con tu cuenta de TIDAL.</li>
+          <li>Creá una app nueva (<strong>Create app</strong>). El nombre no importa, por ejemplo «Winamp Remote».</li>
+          <li>Copiá el <strong>Client ID</strong> y el <strong>Client Secret</strong> de esa app.</li>
+          <li>En el Winamp tocá <strong>TIDAL…</strong> arriba en la Media Library, elegí <strong>TIDAL → Control remoto + buscar en TIDAL</strong>, pegalos y tocá <strong>Probar y guardar</strong>.</li>
+        </ol>
+        <p class="tip">¿Por qué cada uno crea su app? Porque TIDAL no permite repartir esas claves dentro de un programa público. Quedan guardadas cifradas en tu PC y solo se usan para hablar con TIDAL.</p>
+        <p class="tip warn">Al reproducir un tema desde el Winamp, TIDAL no deja arrancar un tema suelto: el Winamp abre su disco y avanza hasta llegar. Tarda unos segundos y puede escucharse un instante de los temas anteriores.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CÓMO SE USA ─── -->
+  <section id="usar">
+    <div class="container">
+      <span class="tag">Cómo se usa</span>
+      <h2>Todo funciona como en 2001.</h2>
+      <p class="lead">Las ventanas flotan sobre tu escritorio como el Winamp original: las arrastrás a cualquier monitor y donde no hay Winamp los clics pasan a lo que está atrás.</p>
+
+      <div class="cards">
+        <div class="card"><div class="k">📚</div><h3>Media Library</h3><p>Con <kbd>L</kbd> o el botón eject. Tus favoritos, playlists, mixes, álbumes y artistas, la búsqueda y lo que está sonando.</p></div>
+        <div class="card"><div class="k">📝</div><h3>La playlist es tu cola</h3><p>Lo que agregás, quitás o reordenás en la playlist del Winamp es lo que va a sonar después, tema por tema.</p></div>
+        <div class="card"><div class="k">🔊</div><h3>Volumen</h3><p>La barrita del Winamp mueve el volumen de Windows, y si lo cambiás desde Windows el Winamp se entera.</p></div>
+        <div class="card"><div class="k">🎚️</div><h3>Ecualizador de 10 bandas</h3><p>Con presets y preamp. Ecualiza todo Windows usando <a class="link" href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">Equalizer APO</a> (gratis, opcional): instalalo, marcá tus parlantes o auriculares y reiniciá.</p></div>
+        <div class="card"><div class="k">📈</div><h3>Visualizador</h3><p>El espectro y el osciloscopio de siempre, reaccionando al audio real que está sonando.</p></div>
+        <div class="card"><div class="k">🔍</div><h3>Tamaño</h3><p><kbd>Ctrl</kbd> <kbd>+</kbd> / <kbd>Ctrl</kbd> <kbd>−</kbd> agranda o achica todo (ideal para monitores 4K) y <kbd>Ctrl</kbd> <kbd>0</kbd> vuelve al 100%.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SKINS Y MILKDROP ─── -->
+  <section id="skins">
+    <div class="container">
+      <span class="tag">Skins y Milkdrop</span>
+      <h2>70.000 skins y el Milkdrop de verdad.</h2>
+
+      <div class="split">
+        <div>
+          <h3>Skins</h3>
+          <p class="muted">El botón <strong>Skins…</strong> abre el selector, con clic para aplicar:</p>
+          <div class="cards" style="grid-template-columns:1fr;gap:10px;margin-top:16px">
+            <div class="card" style="padding:16px 20px"><p><b style="color:var(--white)">Destacados:</b> los Pioneer de autoestéreo de los 90, Green Dimension, XMMS Green, HulkAMP…</p></div>
+            <div class="card" style="padding:16px 20px"><p><b style="color:var(--white)">Buscador del <a class="link" href="https://skins.webamp.org" target="_blank" rel="noopener">Winamp Skin Museum</a>:</b> unos 70.000 skins clásicos. Probá «kenwood», «matrix», «alpine» o tu banda favorita.</p></div>
+            <div class="card" style="padding:16px 20px"><p><b style="color:var(--white)">Desde archivo:</b> cualquier <code>.wsz</code> que tengas guardado de aquella época.</p></div>
+          </div>
+          <p class="muted" style="margin-top:14px;font-size:15px">Cada skin se descarga una sola vez y después anda sin internet.</p>
+        </div>
+        <img src="/assets/winamp/skins.png" width="875" height="480" loading="lazy" alt="El selector de skins con los Pioneer destacados y el Winamp con el skin Pioneer DEH-P80">
+      </div>
+
+      <div class="card" style="margin-top:40px">
+        <h3>Milkdrop</h3>
+        <p>El visualizador psicodélico de Winamp, con cientos de presets que reaccionan a la música. El botón <strong>Milkdrop</strong> lo muestra u oculta, y con <strong>doble clic pasa a pantalla completa</strong> en el monitor donde está: ideal para dejarlo en la tele o en el segundo monitor.</p>
+        <div class="keys">
+          <kbd>Doble clic</kbd><span>Pantalla completa (otro doble clic o <kbd>Esc</kbd> para salir)</span>
+          <kbd>Espacio</kbd><span>Siguiente preset (también <kbd>→</kbd>; <kbd>←</kbd> vuelve al anterior)</span>
+          <kbd>R</kbd><span>Activa o desactiva el cambio automático de preset</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CÓMO SE HIZO ─── -->
+  <section id="como">
+    <div class="container">
+      <span class="tag">Cómo funciona</span>
+      <h2>Nostalgia, con criterio de ingeniería.</h2>
+      <p class="lead">Lo armé trabajando codo a codo con asistentes de IA. La idea era chica; las decisiones, no tanto: no tocar tus cuentas más de lo necesario, que suene bien y que sea honesto sobre lo que puede romperse.</p>
+
+      <div class="cards two">
+        <div class="card">
+          <h3>Webamp: Winamp en serio</h3>
+          <p>La interfaz es <a class="link" href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a>, una reconstrucción fiel de Winamp 2 que lee los mismos <code>.wsz</code> de siempre e incluye Milkdrop (Butterchurn). Va dentro de una app de Electron transparente que cubre tus monitores.</p>
+        </div>
+        <div class="card">
+          <h3>YouTube Music, desde adentro</h3>
+          <p>La app abre music.youtube.com en una ventana oculta y la maneja desde su reproductor. Para buscar y armar la biblioteca usa la misma API interna que usa la web. YouTube no tiene API oficial de música, así que si cambian algo puede fallar hasta la próxima versión.</p>
+        </div>
+        <div class="card">
+          <h3>TIDAL, a control remoto</h3>
+          <p>La reproducción remota de TIDAL es interna, así que el Winamp habla con la app de TIDAL por los controles multimedia de Windows y sus enlaces <code>tidal://</code>. Un ayudante chiquito en C# además mide el volumen y captura el audio para los visualizadores.</p>
+        </div>
+        <div class="card">
+          <h3>Hecho con IA, revisado por humano</h3>
+          <p>Claude escribió buena parte del código y yo revisé, probé y decidí. Así trabajo: la IA acelera, el criterio lo pone uno. Los instaladores los arma GitHub Actions desde el código público.</p>
+          <div class="chips"><span class="chip">Electron</span><span class="chip">TypeScript</span><span class="chip">Webamp</span><span class="chip">Butterchurn</span><span class="chip">C# / .NET</span><span class="chip">GitHub Actions</span><span class="chip">Claude</span></div>
+        </div>
+      </div>
+
+      <p style="margin-top:28px"><a class="btn btn-ghost" href="https://github.com/Lisandro46/winamp-tidal" target="_blank" rel="noopener">Ver el código en GitHub →</a></p>
+    </div>
+  </section>
+
+  <!-- ─── FAQ ─── -->
+  <section id="faq">
+    <div class="container">
+      <span class="tag">Preguntas</span>
+      <h2>Lo que todos preguntan.</h2>
+      <div class="faq">
+        <details>
+          <summary>¿Es seguro?</summary>
+          <p>El código es público y los instaladores los arma GitHub automáticamente a partir de ese código, así que cualquiera puede ver qué hace. No hay servidores propios ni analíticas: tus datos y sesiones quedan en tu computadora.</p>
+        </details>
+        <details>
+          <summary>¿Por qué Windows me dice que no es seguro?</summary>
+          <p>Porque la app no tiene firma digital paga (cientos de dólares por año). El aviso es por la falta de firma, no por algo que la app haga. Tocá <b>Más información → Ejecutar de todas formas</b>.</p>
+        </details>
+        <details>
+          <summary>¿Me pueden bloquear la cuenta de YouTube o de TIDAL?</summary>
+          <p>Con YouTube Music la app usa la misma web que usarías en el navegador y no automatiza nada raro: reproduce lo que vos elegís. Con TIDAL solo aprieta play, pausa y siguiente en tu app, como harías con el teclado.</p>
+          <p>Igual, es un proyecto de fan y no está aprobado por YouTube ni por TIDAL: usalo sabiendo eso.</p>
+        </details>
+        <details>
+          <summary>¿Por qué me pide copiar una «cookie» para YouTube Music?</summary>
+          <p>Solo si Google no te deja iniciar sesión en la ventana de la app. Google bloquea los inicios de sesión dentro de otras apps, y las llaves de acceso (passkeys) directamente no funcionan ahí. Copiando la sesión de tu navegador, donde ya estás logueado, el Winamp puede usar tu cuenta.</p>
+          <p>Ese valor es como una llave de tu cuenta: queda solo en tu PC. No lo compartas con nadie.</p>
+        </details>
+        <details>
+          <summary>¿Tengo publicidad en YouTube Music?</summary>
+          <p>Sin cuenta o sin YouTube Premium, sí, igual que en la web: el Winamp muestra «Anuncio» mientras dura y después sigue tu tema. Con tu cuenta Premium conectada, no.</p>
+        </details>
+        <details>
+          <summary>¿Por qué no veo mis favoritos de TIDAL?</summary>
+          <p>TIDAL tiene que aprobar a mano el login de apps de terceros y todavía no lo hizo (<a href="https://github.com/orgs/tidal-music/discussions/415" target="_blank" rel="noopener">pedido abierto</a>). Mientras tanto podés buscar en todo el catálogo con tu app de desarrollador. Cuando TIDAL lo habilite, se activa sin reinstalar.</p>
+        </details>
+        <details>
+          <summary>El ecualizador no cambia nada.</summary>
+          <p>Necesita <a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">Equalizer APO</a>. Reinstalalo marcando el dispositivo que estás usando (parlantes o auriculares) y reiniciá. Con TIDAL, el modo exclusivo también lo saltea: desactivalo en la configuración de audio de TIDAL.</p>
+        </details>
+        <details>
+          <summary>¿Hay versión para Mac, Linux o celular?</summary>
+          <p>Por ahora no: es solo para Windows 10 y 11 de 64 bits, porque usa los controles multimedia y el audio de Windows.</p>
+        </details>
+        <details>
+          <summary>¿Cuesta algo?</summary>
+          <p>No. Es gratis y de código abierto (licencia MIT). Lo que sí necesitás es tu propia cuenta de TIDAL, o YouTube Premium si querés escuchar sin anuncios.</p>
+        </details>
+        <details>
+          <summary>Algo dejó de funcionar.</summary>
+          <p>YouTube y TIDAL cambian sus apps seguido y a veces algo se desacomoda. Avisá en <a href="https://github.com/Lisandro46/winamp-tidal/issues" target="_blank" rel="noopener">GitHub</a> o por mis redes y lo arreglo en una versión nueva.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section class="cta">
+    <div class="container">
+      <span class="tag">Más nostalgia</span>
+      <h2>¿Y tu WhatsApp con cara de MSN?</h2>
+      <p class="lead">Retro Messenger viste WhatsApp como MSN Messenger 7.5 o ICQ 2000b, con zumbidos y los sonidos originales. Del mismo autor, también gratis.</p>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="/">Conocé Retro Messenger</a>
+        <a class="btn btn-ghost" href="https://trincherai.com/">Conocé TrincherAI</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot">
+      <div>Hecho por <a class="strong" href="https://trincherai.com/">Lisandro Arrigoni · TrincherAI</a></div>
+      <div class="foot-links">
+        <a href="https://github.com/Lisandro46/winamp-tidal" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.youtube.com/@ElUltimoHumanook" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.linkedin.com/in/lisandro-arrigoni" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/lisandro46" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <p class="legal">Proyecto de fan, gratis y de código abierto (MIT). No está afiliado a Winamp, TIDAL, YouTube ni Google. Winamp es marca de sus respectivos dueños; TIDAL es marca de TIDAL Music AS; YouTube es marca de Google LLC. La interfaz es <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a>; los skins son de sus autores y se descargan del <a href="https://skins.webamp.org" target="_blank" rel="noopener">Winamp Skin Museum</a>.</p>
+  </div>
+</footer>
+
+<script>
+  const REPO = 'Lisandro46/winamp-tidal'
+  const download = (file) => `https://github.com/${REPO}/releases/latest/download/${file}`
+
+  // Every download link points at the latest release, so new versions need no edits here.
+  document.querySelectorAll('[data-file]').forEach((a) => { a.href = download(a.dataset.file) })
+
+  /* ── Not on Windows: say so instead of offering an .exe first ── */
+  const ua = navigator.userAgent.toLowerCase()
+  const platform = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase()
+  const isMobile = /android|iphone|ipad|ipod/.test(ua)
+  const isWindows = platform.includes('win') || ua.includes('windows')
+  if (isMobile || !isWindows) {
+    document.getElementById('download-note').innerHTML = isMobile
+      ? 'Winamp Remote es para computadoras con Windows. Abrí esta página desde la compu para bajarlo.'
+      : 'Por ahora solo hay versión para <b>Windows 10 y 11</b>. <a href="#instalar">Ver cómo instalarlo</a>'
+  }
+
+  /* ── Service tabs ── */
+  const tabs = [...document.querySelectorAll('.svc-tabs [role="tab"]')]
+  function selectService(id) {
+    tabs.forEach((tab) => {
+      const on = tab.dataset.svc === id
+      tab.setAttribute('aria-selected', on)
+      tab.tabIndex = on ? 0 : -1
+      document.getElementById(tab.getAttribute('aria-controls')).hidden = !on
+    })
+  }
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectService(tab.dataset.svc))
+    tab.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+      const next = tabs[(i + 1) % tabs.length]
+      selectService(next.dataset.svc)
+      next.focus()
+    })
+  })
+  if (location.hash === '#tidal') selectService('tidal')
+
+  /* ── Screenshot switcher ── */
+  const shot = document.getElementById('shot')
+  const shots = {
+    hero: { src: '/assets/winamp/hero.png', w: 1320, h: 480, alt: 'Winamp Remote con YouTube Music: la Media Library con una búsqueda de Soda Stereo, el Winamp clásico con ecualizador y playlist, y Milkdrop animado a la derecha' },
+    skins: { src: '/assets/winamp/skins.png', w: 875, h: 480, alt: 'El selector de skins con los Pioneer destacados y el Winamp con el skin Pioneer DEH-P80' }
+  }
+  document.querySelectorAll('[data-shot]').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('[data-shot]').forEach((t) => t.setAttribute('aria-selected', t === tab))
+      const s = shots[tab.dataset.shot]
+      shot.src = s.src
+      shot.width = s.w
+      shot.height = s.h
+      shot.alt = s.alt
+    })
+  })
+  new Image().src = shots.skins.src
+
+  /* ── Current version from GitHub (optional) ── */
+  fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((release) => {
+      const date = new Date(release.published_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })
+      document.getElementById('version').textContent = `Versión ${release.tag_name.replace(/^v/, '')} · ${date}`
+    })
+    .catch(() => {})
+</script>
+</body>
+</html>

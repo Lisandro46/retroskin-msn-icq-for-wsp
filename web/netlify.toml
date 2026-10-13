@@ -56,3 +56,19 @@
   from = "/github"
   to = "https://github.com/Lisandro46/retroskin-msn-icq-for-wsp"
   status = 302
+
+# Winamp Remote (retro.trincherai.com/winamp): same idea, other repo.
+[[redirects]]
+  from = "/winamp/windows"
+  to = "https://github.com/Lisandro46/winamp-tidal/releases/latest/download/Winamp-Remote-Setup.exe"
+  status = 302
+
+[[redirects]]
+  from = "/winamp/portable"
+  to = "https://github.com/Lisandro46/winamp-tidal/releases/latest/download/Winamp-Remote-Portable.exe"
+  status = 302
+
+[[redirects]]
+  from = "/winamp/github"
+  to = "https://github.com/Lisandro46/winamp-tidal"
+  status = 302
