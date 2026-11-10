@@ -94,8 +94,6 @@ El nick, el mensaje personal, el estado y el ICQ# son decorativos: se guardan en
 
 **Fuente** (o **Herramientas → Fuente local**) cambia la tipografía de los mensajes y del editor solo en esta app. La preferencia queda guardada; la otra persona sigue viendo la fuente de su WhatsApp. En ICQ está en **Main → Preferences → Local font**. El banner al pie de MSN es decorativo y no contiene enlaces.
 
-En MSN podés hacer clic en tu foto → **Elegir una imagen…** para usar una imagen PNG o JPG de tu PC como **imagen para mostrar**, tanto en tu perfil como al lado de la conversación. Queda guardada en esta app y no cambia tu foto de WhatsApp. Desde el mismo menú podés volver a **Usar foto de WhatsApp**.
-
 ## Desarrollo
 
 ```bash

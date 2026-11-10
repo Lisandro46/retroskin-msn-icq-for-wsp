@@ -9,7 +9,7 @@ import { CHAT_FONTS, NUDGE_TEXT, type Settings, type SkinId, type WaState } from
 import { icqFlower, msnLogo, nudgeIcon, samplePicture, smileyIcon, svgUrl } from '@shared/icons'
 import { sidebarProfile, sidebarFooter, sidebarTools } from '@shared/sidebar'
 import { buttonWithIcon, first, hasIcon, ICON, ONLINE_RE, PRE_PLAIN_RE, SEL, TYPING_RE } from '@wa/selectors'
-import { isVisible, syncNativeLayers } from '@wa/overlay'
+import { isVisible, nativeLayerOpen } from '@wa/overlay'
 
 let settings: Settings | undefined
 let state: WaState | undefined
@@ -212,11 +212,7 @@ function placeOverlay(): void {
     const css = `${Math.round(value)}px`
     if (overlay.style.getPropertyValue(`--wm-${name}`) !== css) overlay.style.setProperty(`--wm-${name}`, css)
   }
-  if (state === 'ready') syncNativeLayers(overlay, side, main)
-  else {
-    overlay.classList.remove('wm-native-layer')
-    for (const part of overlay.children) part.classList.remove('wm-covered')
-  }
+  overlay.classList.toggle('wm-native-layer', state === 'ready' && nativeLayerOpen(overlay, [side, main]))
 }
 
 /* ------------------------------------------------------- open conversation */
@@ -364,7 +360,7 @@ function updatePictures(): void {
   if (ownImg && lastPics.own !== own) ownImg.src = lastPics.own = own
 }
 
-const ownPicture = (): string => settings?.displayPicture || first<HTMLImageElement>(SEL.ownPicture)?.src || ''
+const ownPicture = (): string => first<HTMLImageElement>(SEL.ownPicture)?.src ?? ''
 
 /** The open chat's picture: an <img>, or an <image> inside an SVG mask. Emoji placeholders are skipped. */
 function contactPicture(): string {

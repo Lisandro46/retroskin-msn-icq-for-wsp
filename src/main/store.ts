@@ -56,7 +56,6 @@ function load(): Stored {
     toasts: true,
     alwaysOnTop: false,
     chatFont: 'default',
-    displayPicture: '',
     ...stored
   }
   if (!stored.uin) writeJson('settings.json', cache)
