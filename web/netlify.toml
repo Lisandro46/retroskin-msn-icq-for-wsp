@@ -72,3 +72,24 @@
   from = "/winamp/github"
   to = "https://github.com/Lisandro46/winamp-tidal"
   status = 302
+
+# Retro Cassette: the source is private; only release files are public.
+[[redirects]]
+  from = "/cassette/windows"
+  to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-Setup.exe"
+  status = 302
+
+[[redirects]]
+  from = "/cassette/portable"
+  to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-Portable.exe"
+  status = 302
+
+[[redirects]]
+  from = "/cassette/mac"
+  to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-mac-arm64.dmg"
+  status = 302
+
+[[redirects]]
+  from = "/cassette/mac-intel"
+  to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-mac-x64.dmg"
+  status = 302

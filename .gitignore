@@ -2,3 +2,6 @@ node_modules/
 out/
 dist/
 *.log
+.netlify/
+output/
+.playwright-cli/
