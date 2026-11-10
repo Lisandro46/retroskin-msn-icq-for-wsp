@@ -55,6 +55,7 @@ function load(): Stored {
     shake: true,
     toasts: true,
     alwaysOnTop: false,
+    chatFont: 'default',
     ...stored
   }
   if (!stored.uin) writeJson('settings.json', cache)

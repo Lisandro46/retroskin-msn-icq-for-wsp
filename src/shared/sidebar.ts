@@ -33,8 +33,8 @@ export function sidebarProfile(s: Settings): string {
 export function sidebarFooter(s: Settings): string {
   if (s.skin === 'msn') return `
     <div class="wm-add-contact"><button data-wm-action="search">${searchIcon(14)} Buscar un contacto</button></div>
-    <div class="wm-ad" title="Publicidad ficticia de época"><span>${smileyIcon(22)}</span>
-      <div><b>Personalizá tu Messenger</b><small>Emoticonos · fondos · conversaciones</small></div></div>`
+    <div class="wm-ad"><span>${smileyIcon(22)}</span>
+      <div><b>Un recuerdo de Messenger</b><small>Banner decorativo · sin enlaces</small></div></div>`
   return `
     <div class="wm-system-notice">${noteIcon(14)}<span>System Notice</span><button data-wm-menu="icq-services" title="Services">▾</button></div>
     <div class="wm-icq-bottom">

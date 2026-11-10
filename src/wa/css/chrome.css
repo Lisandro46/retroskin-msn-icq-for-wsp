@@ -55,7 +55,7 @@ html[data-skin='msn'] #wm-side-footer { background: linear-gradient(#eff5fd, #d1
 .wm-ad div { min-width: 0; }
 .wm-ad b, .wm-ad small { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .wm-ad b { font-size: 11px; }
-.wm-ad small { font-size: 10px; color: #365f8c; margin-top: 3px; }
+.wm-ad small { font-size: 10px; color: #553c11; margin-top: 3px; }
 html[data-skin='msn'] #wm-chat-title { background: linear-gradient(#1285f0, #0054e3 20%, #0867ea 90%, #003caa); color: #fff; text-shadow: 1px 1px #06347e; border-left: 1px solid #0040b4; }
 html[data-skin='icq'] { --wm-profile-h: 46px; --wm-side-footer-h: 44px; }
 html[data-skin='icq'] #wm-root { font: 11px 'Microsoft Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif; }
@@ -87,7 +87,7 @@ html[data-skin='icq'] #wm-side-footer { padding: 2px 3px; background: var(--icq-
 .wm-icq-status { flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; text-align: left; }
 .wm-icq-status span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 html[data-skin='icq'] #wm-chat-title { background: linear-gradient(90deg, #000080, #1084d0); color: white; border: 1px solid #808080; }
-html[data-skin='msn'][data-wm-compact='1'] #main { padding-right: 0 !important; }
+html[data-skin='msn'][data-wm-compact='1'] #main[data-wm-chat-frame='1'] { padding-right: 0 !important; }
 html[data-skin='msn'][data-wm-compact='1'] #wm-pic-contact,
 html[data-skin='msn'][data-wm-compact='1'] #wm-pic-own { display: none !important; }
 @media (prefers-reduced-motion: reduce) {

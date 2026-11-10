@@ -5,10 +5,11 @@
  * types *ZUMBIDO* in the composer and presses send.
  */
 import { ipcRenderer } from 'electron'
-import { NUDGE_TEXT, type Settings, type SkinId, type WaState } from '@shared/types'
+import { CHAT_FONTS, NUDGE_TEXT, type Settings, type SkinId, type WaState } from '@shared/types'
 import { icqFlower, msnLogo, nudgeIcon, samplePicture, smileyIcon, svgUrl } from '@shared/icons'
 import { sidebarProfile, sidebarFooter, sidebarTools } from '@shared/sidebar'
 import { buttonWithIcon, first, hasIcon, ICON, ONLINE_RE, PRE_PLAIN_RE, SEL, TYPING_RE } from '@wa/selectors'
+import { isVisible, nativeLayerOpen } from '@wa/overlay'
 
 let settings: Settings | undefined
 let state: WaState | undefined
@@ -36,6 +37,11 @@ function applySkin(): void {
     if (value) root.dataset.skin = value
     else delete root.dataset.skin
   }
+  const font = settings?.chatFont
+  const family = font && font !== 'default' && Object.hasOwn(CHAT_FONTS, font) ? CHAT_FONTS[font] : ''
+  if (family) {
+    if (root.style.getPropertyValue('--wm-chat-font') !== family) root.style.setProperty('--wm-chat-font', family)
+  } else if (root.style.getPropertyValue('--wm-chat-font')) root.style.removeProperty('--wm-chat-font')
 }
 
 const setData = (el: HTMLElement, key: string, value: string): void => {
@@ -66,7 +72,7 @@ function buildOverlay(): void {
         <div><b>Iniciar sesión</b><span>Escaneá el código con WhatsApp en tu teléfono para iniciar sesión en Messenger.</span></div></div>
       <div id="wm-status"></div>
       <div id="wm-bar">
-        <button id="wm-font" title="Cambiar la fuente"><b>A</b> Fuente</button>
+        <button id="wm-font" data-wm-menu="font" title="Cambiar la fuente solo en esta app; no se envía por WhatsApp"><b>A</b> Fuente</button>
         <button id="wm-emoji" title="Emoticonos">${smileyIcon(16)}<span class="wm-caret">▾</span></button>
         <button id="wm-nudge" title="Enviar un zumbido (Ctrl+G)">${nudgeIcon(16)} Zumbido</button>
         <span class="wm-grow"></span>
@@ -92,7 +98,6 @@ function buildOverlay(): void {
   })
   part('wm-nudge')?.addEventListener('click', () => void sendNudge())
   part('wm-emoji')?.addEventListener('click', () => buttonWithIcon(document.querySelector(SEL.footer), ICON.emoji)?.click())
-  part('wm-font')?.addEventListener('click', () => notice('Las fuentes de Messenger no viajan por WhatsApp :)'))
   part('wm-send')?.addEventListener('click', () => pressSend())
   lastPics = { contact: '', own: '' }
 }
@@ -179,7 +184,8 @@ function placeOverlay(): void {
   }
   const mainRect = main?.getBoundingClientRect()
   const footerRect = footer?.getBoundingClientRect()
-  const visible = state === 'ready' && !!mainRect && !!footerRect && mainRect.width > 0 && mainRect.height > 0 && footerRect.height > 0
+  // Selection/forwarding replaces the composer with native actions. Do not cover them.
+  const visible = state === 'ready' && !!mainRect && !!footerRect && mainRect.width > 0 && mainRect.height > 0 && footerRect.height > 0 && isVisible(composer())
   overlay.classList.toggle('wm-chat', visible)
   if (main) setData(main, 'wmChatFrame', visible && skin() !== 'off' ? '1' : '0')
   const vars: Record<string, number> = {}
@@ -206,6 +212,7 @@ function placeOverlay(): void {
     const css = `${Math.round(value)}px`
     if (overlay.style.getPropertyValue(`--wm-${name}`) !== css) overlay.style.setProperty(`--wm-${name}`, css)
   }
+  overlay.classList.toggle('wm-native-layer', state === 'ready' && nativeLayerOpen(overlay, [side, main]))
 }
 
 /* ------------------------------------------------------- open conversation */
@@ -262,10 +269,16 @@ function markMessages(chatName: string): void {
     if (!bubble) {
       // Date separators and system notices break the "X dice:" grouping.
       setData(row, 'wmSystem', '1')
+      // Virtualized rows can also be recycled from messages into notices.
+      for (const marked of [row, ...row.querySelectorAll<HTMLElement>('[data-wm-msg]')]) {
+        for (const key of ['wmMsg', 'wmSender', 'wmTime', 'wmFirst', 'wmNudge']) delete marked.dataset[key]
+      }
       previous = ''
       previousDir = undefined
       return
     }
+    // A row may have been seen before its message content finished loading.
+    delete row.dataset.wmSystem
     const wrapper = row.querySelector<HTMLElement>(SEL.messageWrapper) ?? row
     const pre = bubble.querySelector(SEL.prePlainText)?.getAttribute('data-pre-plain-text') ?? ''
     const parsed = PRE_PLAIN_RE.exec(pre)
@@ -549,7 +562,11 @@ window.addEventListener('DOMContentLoaded', () => {
   layoutObserver = new ResizeObserver(schedule)
   ipcRenderer.send('wa:hello')
   tick()
-  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true })
+  new MutationObserver(schedule).observe(document.body, {
+    childList: true, subtree: true, attributes: true,
+    attributeFilter: ['class', 'style', 'hidden', 'aria-hidden', 'aria-modal', 'role', 'data-testid']
+  })
   window.addEventListener('resize', schedule)
+  document.addEventListener('fullscreenchange', schedule)
   setInterval(tick, 700)
 })
