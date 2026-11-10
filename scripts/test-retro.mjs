@@ -1,11 +1,13 @@
 /** Regression checks against the real preload/CSS in Chromium, using fictional data. */
 import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
+import { mkdtempSync } from 'node:fs'
 import path from 'node:path'
 import { app, BrowserWindow } from 'electron'
 import { createPreviewServer } from './preview-retro.mjs'
 
 app.disableHardwareAcceleration()
+app.setPath('userData', mkdtempSync(path.join(app.getPath('temp'), 'retro-ui-tests-')))
 app.on('window-all-closed', () => {})
 async function main() {
   const server = createPreviewServer()
@@ -29,6 +31,61 @@ async function main() {
     for (const skin of ['msn', 'icq', 'off']) {
       await run(skin => window.postMessage({ skin }, location.origin), skin)
       await settle()
+      await check(`${skin}: persistent listbox does not hide retro chrome`, async () => {
+        await run(() => document.querySelector('#pane-side').setAttribute('role', 'listbox'))
+        await settle()
+        assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-bar')).visibility), 'visible')
+        if (skin !== 'off') assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-side-footer')).visibility), 'visible')
+      })
+      await run(() => document.querySelector('#pane-side').removeAttribute('role'))
+      await check(`${skin}: pane whitespace with pointer-events none keeps chrome visible`, async () => {
+        await run(() => {
+          const style = document.createElement('style')
+          style.id = 'test-pointer-events'
+          style.textContent = '#side, #main { pointer-events: none } #side > *, #main > * { pointer-events: auto }'
+          document.head.append(style)
+        })
+        await settle()
+        assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-bar')).visibility), 'visible')
+      })
+      await run(() => document.querySelector('#test-pointer-events').remove())
+      await check(`${skin}: formatting menu preserves banner, profile and nudge`, async () => {
+        await run(() => {
+          const menu = document.createElement('div')
+          menu.id = 'test-format-menu'
+          menu.role = 'menu'
+          const footer = document.querySelector('#main footer').getBoundingClientRect()
+          menu.style = `position:fixed;left:${footer.left + 70}px;top:${footer.top + 3}px;width:200px;height:30px;z-index:100;background:white`
+          menu.textContent = 'B I U'
+          document.querySelector('#app').append(menu)
+        })
+        await settle()
+        const ids = skin === 'off' ? ['wm-bar'] : ['wm-profile', 'wm-side-footer', 'wm-bar']
+        for (const id of ids) assert.equal(await run(id => getComputedStyle(document.getElementById(id)).visibility, id), 'visible', id)
+      })
+      await run(() => document.querySelector('#test-format-menu').remove())
+      await settle()
+      if (skin === 'msn') {
+        await check('msn: restored nudge button is clickable and emits the sound/shake event', async () => {
+          const hit = await run(() => {
+            window.testNudges = 0
+            window.addEventListener('message', event => {
+              if (event.data.name === 'wa:nudge-sent') window.testNudges++
+            })
+            const button = document.querySelector('#wm-nudge')
+            const r = button.getBoundingClientRect()
+            const target = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)?.closest('button')
+            if (target === button) target.click()
+            return target?.id
+          })
+          await settle()
+          assert.equal(hit, 'wm-nudge')
+          assert.equal(await run(() => window.testNudges), 1)
+          assert.equal(await run(() => document.querySelector('[contenteditable="true"]').textContent), '*ZUMBIDO*')
+          await run(() => { document.querySelector('[contenteditable="true"]').textContent = '' })
+        })
+      }
+      if (process.argv.includes('--chrome-only')) continue
       await check(`${skin}: normal chat controls are visible`, async () => {
         assert.equal(await run(() => {
           const bar = document.querySelector('#wm-bar')
@@ -77,7 +134,11 @@ async function main() {
         for (const hidden of [false, true, false, true]) {
           await run(hidden => { document.querySelector('#test-menu').hidden = hidden }, hidden)
           await settle()
-          assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-bar')).visibility), hidden ? 'visible' : 'hidden')
+          assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-bar')).visibility), 'visible')
+          if (skin !== 'off') {
+            assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-profile')).visibility), hidden ? 'visible' : 'hidden')
+            assert.equal(await run(() => getComputedStyle(document.querySelector('#wm-side-footer')).visibility), 'visible')
+          }
         }
         await run(() => document.querySelector('#test-menu').remove())
       })
@@ -131,6 +192,45 @@ async function main() {
         assert.equal(await run(() => getComputedStyle(document.querySelector('[data-testid="selectable-text"]')).fontFamily), originalFont)
       })
       if (skin === 'msn') {
+        await check('msn: display picture menu, local preview and reset work', async () => {
+          const original = await run(() => document.querySelector('#wm-profile-pic').src)
+          const custom = await run(() => {
+            const canvas = document.createElement('canvas')
+            canvas.width = canvas.height = 64
+            const context = canvas.getContext('2d')
+            context.fillStyle = '#729bdf'
+            context.fillRect(0, 0, 64, 64)
+            context.fillStyle = '#ffda57'
+            context.beginPath()
+            context.arc(32, 32, 20, 0, Math.PI * 2)
+            context.fill()
+            return canvas.toDataURL()
+          })
+          await run(() => {
+            window.testPictureMenu = null
+            window.addEventListener('message', event => {
+              if (event.data.name === 'wa:menu') window.testPictureMenu = event.data.value?.menu
+            })
+            document.querySelector('[data-wm-menu="picture"]').click()
+          })
+          await settle()
+          assert.equal(await run(() => window.testPictureMenu), 'picture')
+          await run(displayPicture => window.postMessage({ displayPicture }, location.origin), custom)
+          await settle()
+          for (const id of ['wm-profile-pic', 'wm-pic-own']) {
+            assert.equal(await run(id => document.getElementById(id).src, id), custom)
+            assert.ok(await run(id => document.getElementById(id).naturalWidth > 0, id))
+          }
+          await fs.writeFile(path.join(output, 'msn-custom-picture.png'), (await win.webContents.capturePage()).toPNG())
+          for (const selectedSkin of ['icq', 'msn']) {
+            await run(skin => window.postMessage({ skin }, location.origin), selectedSkin)
+            await settle()
+          }
+          assert.equal(await run(() => document.querySelector('#wm-profile-pic').src), custom)
+          await run(() => window.postMessage({ displayPicture: '' }, location.origin))
+          await settle()
+          assert.equal(await run(() => document.querySelector('#wm-profile-pic').src), original)
+        })
         await check('msn: font button opens the native font menu', async () => {
           await run(() => {
             window.fontMenu = null
@@ -143,7 +243,8 @@ async function main() {
           assert.equal(await run(() => window.fontMenu?.menu), 'font')
         })
         await check('msn: decorative banner does not promise links', async () => {
-          assert.equal(await run(() => document.querySelector('.wm-ad small').textContent), 'Banner decorativo · sin enlaces')
+          assert.equal(await run(() => document.querySelector('.wm-ad b').textContent), 'Personalizá tu Messenger')
+          assert.match(await run(() => document.querySelector('.wm-ad').title), /sin enlaces/)
           assert.equal(await run(() => document.querySelector('.wm-ad').querySelectorAll('button,a').length), 0)
         })
         await fs.writeFile(path.join(output, 'msn-fixed.png'), (await win.webContents.capturePage()).toPNG())
@@ -158,6 +259,16 @@ async function main() {
         await settle()
       }
       if (skin === 'off') continue
+      if (skin === 'icq') {
+        await check('icq: Ctrl+G still triggers the nudge event', async () => {
+          const before = await run(() => window.testNudges)
+          await run(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'g', ctrlKey: true, bubbles: true })))
+          await settle()
+          assert.equal(await run(() => window.testNudges), before + 1)
+          await run(() => { document.querySelector('[contenteditable="true"]').textContent = '' })
+        })
+        await fs.writeFile(path.join(output, 'icq-fixed.png'), (await win.webContents.capturePage()).toPNG())
+      }
       await check(`${skin}: a late-loading message is not a grey system notice`, async () => {
         await run(() => {
           const row = document.createElement('div')
@@ -194,6 +305,7 @@ async function main() {
     }
   } finally {
     win.destroy()
+    server.closeAllConnections()
     await new Promise(resolve => server.close(resolve))
     console.log(`${passes} passed, ${failures} failed`)
     app.exit(failures ? 1 : 0)

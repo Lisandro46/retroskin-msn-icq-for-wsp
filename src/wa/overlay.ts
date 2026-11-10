@@ -6,28 +6,51 @@ export function isVisible(element: Element | null): element is HTMLElement {
   return rect.width > 0 && rect.height > 0 && element.checkVisibility({ checkVisibilityCSS: true })
 }
 
-/**
- * The chrome lives outside React's DOM. Yield to native dialogs/menus, including
- * viewers without accessibility roles that cover the underlying panes. Ignore
- * our own elements during hit testing so hiding/showing never oscillates.
- */
-export function nativeLayerOpen(overlay: HTMLElement, panes: (HTMLElement | null)[]): boolean {
-  if (document.fullscreenElement) return true
-  if ([...document.querySelectorAll(SEL.nativeLayer)].some(element =>
-    !overlay.contains(element) && isVisible(element) && !element.closest('[aria-hidden="true"]')
-  )) return true
+const overlaps = (a: DOMRect, b: DOMRect): boolean =>
+  Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 &&
+  Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1
 
-  return panes.filter(isVisible).some(pane => {
-    const r = pane.getBoundingClientRect()
-    const left = Math.max(0, r.left), right = Math.min(innerWidth, r.right)
-    const top = Math.max(0, r.top), bottom = Math.min(innerHeight, r.bottom)
-    if (right - left < 4 || bottom - top < 4) return false
-    return [left + 2, (left + right) / 2, right - 2].some(x =>
-      [top + 2, (top + bottom) / 2, bottom - 2].some(y => {
-        const native = document.elementsFromPoint(x, y).find(element =>
-          element !== overlay && !overlay.contains(element))
-        return !!native && !pane.contains(native)
-      })
-    )
-  })
+/** Ignore normal pane layout and its ancestors, including pointer-transparent whitespace. */
+function floatingSurface(element: Element, panes: HTMLElement[]): HTMLElement | null {
+  for (let node: Element | null = element; node; node = node.parentElement) {
+    if (panes.some(pane => node!.contains(pane))) return null
+    if (node instanceof HTMLElement && /^(absolute|fixed)$/.test(getComputedStyle(node).position)) return node
+  }
+  return null
+}
+
+/** Only genuine modals hide all chrome. Small popups yield just the parts they overlap. */
+export function syncNativeLayers(overlay: HTMLElement, side: HTMLElement | null, main: HTMLElement | null): void {
+  const panes = [side, main].filter(isVisible)
+  const modal = !!document.fullscreenElement || [...document.querySelectorAll(SEL.nativeModal)].some(element =>
+    !overlay.contains(element) && isVisible(element) && !element.closest('[aria-hidden="true"]') &&
+    !panes.some(pane => element.contains(pane))
+  )
+  overlay.classList.toggle('wm-native-layer', modal)
+
+  const popups = [...document.querySelectorAll(SEL.nativePopup)]
+    .filter(element => !overlay.contains(element) && !element.closest(SEL.chatList) &&
+      isVisible(element) && !element.closest('[aria-hidden="true"]'))
+    .map(element => floatingSurface(element, panes))
+    .filter((element): element is HTMLElement => !!element)
+
+  for (const part of overlay.children) {
+    if (!(part instanceof HTMLElement)) continue
+    const r = part.getBoundingClientRect()
+    const owner = ['wm-profile', 'wm-side-footer', 'wm-side-tools'].includes(part.id) ? side : main
+    let covered = popups.some(popup => overlaps(r, popup.getBoundingClientRect()))
+    // Viewers without semantic roles: test this part, never unrelated points in a pane.
+    if (!covered && owner && r.width > 0 && r.height > 0) {
+      covered = [r.left + 2, (r.left + r.right) / 2, r.right - 2].some(x =>
+        [r.top + 2, (r.top + r.bottom) / 2, r.bottom - 2].some(y => {
+          const native = document.elementsFromPoint(x, y).find(element =>
+            element !== overlay && !overlay.contains(element))
+          if (!native || owner.contains(native) || native.contains(owner)) return false
+          const surface = floatingSurface(native, panes)
+          return !!surface && overlaps(r, surface.getBoundingClientRect())
+        })
+      )
+    }
+    part.classList.toggle('wm-covered', covered)
+  }
 }

@@ -21,6 +21,7 @@ export interface Settings {
   toasts: boolean
   alwaysOnTop: boolean
   chatFont: ChatFont
+  displayPicture: string
 }
 
 /** What the WhatsApp page looks like right now. */
@@ -33,7 +34,7 @@ export interface Rect {
   height: number
 }
 
-export type MenuId = 'file' | 'contacts' | 'actions' | 'tools' | 'help' | 'status' | 'icq-main' | 'icq-services' | 'skin' | 'font'
+export type MenuId = 'file' | 'contacts' | 'actions' | 'tools' | 'help' | 'status' | 'icq-main' | 'icq-services' | 'skin' | 'font' | 'picture'
 
 export interface ToastData {
   skin: SkinId

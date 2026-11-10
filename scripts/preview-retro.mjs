@@ -24,7 +24,8 @@ const settings = {
   shake: false,
   toasts: false,
   alwaysOnTop: false,
-  chatFont: 'default'
+  chatFont: 'default',
+  displayPicture: ''
 }
 
 /* ------------------------------------------------- stand-in for 'electron' */
@@ -55,6 +56,10 @@ window.addEventListener('message', (e) => {
   }
   if (e.data.chatFont) {
     settings = { ...settings, chatFont: e.data.chatFont }
+    emit()
+  }
+  if (typeof e.data.displayPicture === 'string') {
+    settings = { ...settings, displayPicture: e.data.displayPicture }
     emit()
   }
   if (e.data.action === 'chat') {
