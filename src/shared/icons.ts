@@ -140,7 +140,15 @@ export function smileyIcon(size = 16): string {
   )
 }
 
-export const svgUrl = (markup: string): string => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`
+/** The winking face on the winks button. */
+export function winkIcon(size = 16): string {
+  return svg(
+    size,
+    `<circle cx="16" cy="16" r="13" fill="#ffd94a" stroke="#b88600" stroke-width="1.6"/><circle cx="11.5" cy="12.5" r="2" fill="#5a3b00"/><path d="M18 13q2.5-2.4 5 0" stroke="#5a3b00" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M9.5 18.5q6.5 6.5 13 0" stroke="#5a3b00" stroke-width="2" fill="none" stroke-linecap="round"/>`
+  )
+}
+
+export const svgUrl =(markup: string): string => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`
 
 /** ICQ's blinking yellow note: a message is waiting. */
 export function noteIcon(size = 16): string {

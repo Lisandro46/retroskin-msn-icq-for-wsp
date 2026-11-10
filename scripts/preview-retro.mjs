@@ -22,7 +22,9 @@ const settings = {
   sounds: false,
   shake: false,
   toasts: false,
-  alwaysOnTop: false
+  alwaysOnTop: false,
+  winks: true,
+  chatFont: 'default'
 }
 
 /* ------------------------------------------------- stand-in for 'electron' */
@@ -54,6 +56,18 @@ window.addEventListener('message', (e) => {
   if (e.data.action === 'chat') {
     const main = document.getElementById('main')
     main.hidden = !main.hidden
+  }
+  if (e.data.action === 'font') {
+    settings = { ...settings, chatFont: settings.chatFont === 'default' ? 'comic' : 'default' }
+    emit()
+  }
+  if (e.data.action === 'wink') {
+    // A fresh single-emoji message, as WhatsApp would add it: the preload should play it big.
+    const now = new Date()
+    const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0')
+    const list = document.querySelector('[data-testid="conversation-background"]')
+    list.insertAdjacentHTML('beforeend', '<div role="row"><div data-id="wink-' + Date.now() + '"><span data-testid="tail-' + e.data.dir + '"></span><div><div data-testid="msg-container"><div data-pre-plain-text="[' + time + ', 11/10/2026] Ana García: "><span data-testid="selectable-text"><img class="emoji" alt="' + e.data.emoji + '" width="20" height="20"></span><span data-testid="msg-meta">' + time + '</span></div></div></div></div></div>')
+    list.scrollTop = list.scrollHeight
   }
   if (e.data.action === 'composer') {
     document.querySelector('#main footer').style.height = e.data.large ? '140px' : '68px'
@@ -114,6 +128,9 @@ document.getElementById('compact').onclick = () => {
   stage.style.width = compact ? '720px' : '1040px'
 }
 document.getElementById('chat').onclick = () => post({ action: 'chat' })
+document.getElementById('font').onclick = () => post({ action: 'font' })
+document.getElementById('wink-in').onclick = () => post({ action: 'wink', dir: 'in', emoji: '💋' })
+document.getElementById('wink-out').onclick = () => post({ action: 'wink', dir: 'out', emoji: '❤️' })
 document.getElementById('composer').onclick = () => {
   large = !large
   post({ action: 'composer', large })
@@ -150,6 +167,9 @@ const outer = `<!doctype html>
   <button id="compact">Ancho compacto</button>
   <button id="chat">Abrir/cerrar chat</button>
   <button id="composer">Editor multilínea</button>
+  <button id="font">Fuente Comic/Predeterminada</button>
+  <button id="wink-in">Recibir 💋</button>
+  <button id="wink-out">Enviar ❤️</button>
 </div>
 <div id="stage"><div id="root" data-wa="ready"></div></div>
 <pre id="events">Eventos de prueba</pre>
@@ -244,6 +264,7 @@ const wa = `<!doctype html>
 <link rel="stylesheet" href="/src/wa/css/chrome.css">
 <link rel="stylesheet" href="/src/wa/css/msn.css">
 <link rel="stylesheet" href="/src/wa/css/icq.css">
+<link rel="stylesheet" href="/src/wa/css/winks.css">
 <script type="module">
   import { iconCssVars } from '/src/shared/icons.ts'
   document.head.insertAdjacentHTML('beforeend', '<style>' + iconCssVars() + '</style>')
