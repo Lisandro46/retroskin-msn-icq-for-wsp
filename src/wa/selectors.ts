@@ -31,9 +31,6 @@ export const SEL = {
   chatTitle:'[data-testid="conversation-info-header-chat-title"]',
   chatInfo: '[data-testid="conversation-info-header"]',
   footer: '#main footer',
-  /** Native popups must take priority over our decorative chrome. */
-  nativeModal: '[role="dialog"], [aria-modal="true"], [data-testid="media-viewer"]',
-  nativePopup: '[role="menu"], [role="listbox"], [data-testid="drawer-left"], [data-testid="drawer-right"]',
   composer: '#main [data-testid="conversation-compose-box-input"], #main footer div[contenteditable="true"]',
   /** Message rows in the open conversation. */
   rows: '#main [role="row"]',

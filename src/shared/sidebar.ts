@@ -10,7 +10,7 @@ const esc = (value: string): string => value.replace(/[&<>"']/g, (c) =>
 
 export function sidebarProfile(s: Settings): string {
   if (s.skin === 'msn') return `
-    <button class="wm-profile-picture" data-wm-menu="picture" title="Cambiar imagen para mostrar (solo en esta app)" aria-label="Cambiar imagen para mostrar"><img id="wm-profile-pic" alt="Tu imagen para mostrar" /></button>
+    <div class="wm-profile-picture"><img id="wm-profile-pic" alt="Tu imagen para mostrar" /></div>
     <div class="wm-profile-info">
       <div class="wm-profile-line">
         <span data-wm-edit="nick" contenteditable="plaintext-only" role="textbox" aria-multiline="false" spellcheck="false" aria-label="Nombre para mostrar">${esc(s.nick)}</span>
@@ -33,7 +33,7 @@ export function sidebarProfile(s: Settings): string {
 export function sidebarFooter(s: Settings): string {
   if (s.skin === 'msn') return `
     <div class="wm-add-contact"><button data-wm-action="search">${searchIcon(14)} Buscar un contacto</button></div>
-    <div class="wm-ad" title="Publicidad ficticia de época · decorativa, sin enlaces"><span>${smileyIcon(22)}</span>
+    <div class="wm-ad" title="Publicidad ficticia de época"><span>${smileyIcon(22)}</span>
       <div><b>Personalizá tu Messenger</b><small>Emoticonos · fondos · conversaciones</small></div></div>`
   return `
     <div class="wm-system-notice">${noteIcon(14)}<span>System Notice</span><button data-wm-menu="icq-services" title="Services">▾</button></div>

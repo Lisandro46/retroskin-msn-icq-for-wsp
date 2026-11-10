@@ -10,9 +10,6 @@
 #wm-bar > * {
   pointer-events: auto;
 }
-/* Native viewers, menus and dialogs own both the view and pointer input. */
-#wm-root.wm-native-layer, #wm-root > .wm-covered { visibility: hidden; }
-#wm-pic-contact, #wm-pic-own, #wm-login { pointer-events: none; }
 #wm-root svg {
   display: block;
 }
@@ -76,16 +73,6 @@ html:not([data-skin]) {
 }
 
 /* Reserve space for the toolbar above the composer. */
-html[data-skin] #main[data-wm-chat-frame='1'] footer {
+html[data-skin] #main footer {
   margin-top: var(--wm-reserve) !important;
-}
-
-/* Higher specificity than each skin's base font; never changes outgoing text. */
-html[data-skin] #app #main :is([data-testid='selectable-text'], .selectable-text, [contenteditable='true']),
-html[data-skin] #app #main :is([data-testid='selectable-text'], .selectable-text, [contenteditable='true']) * {
-  font-family: var(--wm-chat-font, Tahoma), 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif !important;
-}
-html[data-skin='icq'] #app #main :is([data-testid='selectable-text'], .selectable-text, [contenteditable='true']),
-html[data-skin='icq'] #app #main :is([data-testid='selectable-text'], .selectable-text, [contenteditable='true']) * {
-  font-family: var(--wm-chat-font, 'Microsoft Sans Serif'), 'MS Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif !important;
 }
