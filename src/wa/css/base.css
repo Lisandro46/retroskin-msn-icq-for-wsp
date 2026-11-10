@@ -11,7 +11,7 @@
   pointer-events: auto;
 }
 /* Native viewers, menus and dialogs own both the view and pointer input. */
-#wm-root.wm-native-layer { visibility: hidden; }
+#wm-root.wm-native-layer, #wm-root > .wm-covered { visibility: hidden; }
 #wm-pic-contact, #wm-pic-own, #wm-login { pointer-events: none; }
 #wm-root svg {
   display: block;
