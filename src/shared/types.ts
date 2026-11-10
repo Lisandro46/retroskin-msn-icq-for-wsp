@@ -5,6 +5,9 @@ export type IcqStatus = 'online' | 'ffc' | 'away' | 'na' | 'occupied' | 'dnd' | 
 
 export type SoundId = 'message' | 'nudge' | 'online'
 
+export const CHAT_FONTS = { default: 'Predeterminada', tahoma: 'Tahoma', arial: 'Arial', verdana: 'Verdana', comic: 'Comic Sans MS' } as const
+export type ChatFont = keyof typeof CHAT_FONTS
+
 /** Everything here is local decoration: none of it reaches WhatsApp. */
 export interface Settings {
   skin: SkinId
@@ -17,6 +20,7 @@ export interface Settings {
   shake: boolean
   toasts: boolean
   alwaysOnTop: boolean
+  chatFont: ChatFont
 }
 
 /** What the WhatsApp page looks like right now. */
@@ -29,7 +33,7 @@ export interface Rect {
   height: number
 }
 
-export type MenuId = 'file' | 'contacts' | 'actions' | 'tools' | 'help' | 'status' | 'icq-main' | 'icq-services' | 'skin'
+export type MenuId = 'file' | 'contacts' | 'actions' | 'tools' | 'help' | 'status' | 'icq-main' | 'icq-services' | 'skin' | 'font'
 
 export interface ToastData {
   skin: SkinId

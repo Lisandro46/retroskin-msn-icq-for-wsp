@@ -105,7 +105,7 @@ html[data-skin='msn'] .wm-caret {
 }
 
 /* ------------------------------------------------- display pictures (right) */
-html[data-skin='msn'] #main {
+html[data-skin='msn'] #main[data-wm-chat-frame='1'] {
   padding-right: 118px !important;
   background: #fff !important;
 }
@@ -307,7 +307,7 @@ html[data-skin='msn'] [data-wm-msg] [data-testid='msg-container'] {
   padding-left: 14px !important;
   max-width: 100% !important;
 }
-html[data-skin='msn'] [data-wm-msg] [data-testid='selectable-text'] {
+html[data-skin='msn'] [data-wm-msg] :is([data-testid='selectable-text'], .selectable-text) {
   color: #000 !important;
 }
 html[data-skin='msn'] [data-wm-msg] [data-testid='msg-meta'] {
@@ -333,7 +333,7 @@ html[data-skin='msn'] [data-wm-msg] [data-testid='author']:not(:has([data-testid
   content: ' dice:';
 }
 /* Date separators and system notices: plain grey text */
-html[data-skin='msn'] [data-wm-system] * {
+html[data-skin='msn'] [data-wm-system='1']:not(:has([data-testid='msg-container'])) * {
   background: transparent !important;
   box-shadow: none !important;
   color: #8a8a8a !important;
