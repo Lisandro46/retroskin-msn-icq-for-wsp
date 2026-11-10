@@ -41,6 +41,9 @@
 #wm-root.wm-chat #wm-pic-own {
   display: flex;
 }
+#wm-root.wm-chat.wm-selecting #wm-pic-own {
+  display: none;
+}
 html[data-wm-state='login'] #wm-login {
   display: flex;
 }

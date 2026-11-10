@@ -202,6 +202,9 @@ function placeOverlay(): void {
   const footerRect = footer?.getBoundingClientRect()
   const visible = state === 'ready' && !!mainRect && !!footerRect && mainRect.width > 0 && mainRect.height > 0 && footerRect.height > 0
   overlay.classList.toggle('wm-chat', visible)
+  // Selecting messages empties the footer and lays WhatsApp's forward/delete bar across the
+  // whole pane, under the own picture: the picture steps aside while that bar is up.
+  overlay.classList.toggle('wm-selecting', visible && !footer?.firstElementChild && !composer())
   if (main) setData(main, 'wmChatFrame', visible && skin() !== 'off' ? '1' : '0')
   const vars: Record<string, number> = {}
   if (sideVisible && sideRect) Object.assign(vars, {
