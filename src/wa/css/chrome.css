@@ -5,7 +5,7 @@
 #wm-root.wm-chat #wm-chat-title { display: flex; }
 #wm-profile {
   left: var(--wm-side-left); top: var(--wm-side-top); width: var(--wm-side-width);
-  height: var(--wm-profile-h); z-index: 1; overflow: hidden;
+  height: var(--wm-profile-h); overflow: hidden;
 }
 #wm-side-footer {
   left: var(--wm-side-left); top: calc(var(--wm-side-bottom) - var(--wm-side-footer-h));
@@ -52,6 +52,7 @@ html[data-skin='msn'] #wm-side-footer { background: linear-gradient(#eff5fd, #d1
 .wm-add-contact button { display: flex; align-items: center; gap: 3px; border: 0; color: #285b91; background: none; padding: 2px; }
 .wm-add-contact button:hover { text-decoration: underline; }
 .wm-ad { height: 44px; margin: 0 7px 6px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; overflow: hidden; border: 1px solid #a6b6cd; background: linear-gradient(110deg, #fff1bf, #ffd976); color: #553c11; }
+.wm-ad[data-wm-action] { cursor: pointer; }
 .wm-ad div { min-width: 0; }
 .wm-ad b, .wm-ad small { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .wm-ad b { font-size: 11px; }

@@ -1,14 +1,29 @@
 /* Overlay drawn by the preload over WhatsApp (toolbar, pictures, status line). */
+/*
+   The root is deliberately not positioned: it must not form a stacking context, so every
+   piece takes its own level among WhatsApp's layers (it is mounted next to them, see
+   overlayHost in the preload). WhatsApp's levels: chat pane 100, list pane and middle
+   drawer 200, left/fullscreen drawers 300, menus/toasts 900, viewer and dialogs above.
+*/
 #wm-root {
-  position: fixed;
-  inset: 0;
   pointer-events: none;
-  z-index: 2147483000;
   font: 11px Tahoma, 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif;
 }
 #wm-root > *,
 #wm-bar > * {
   pointer-events: auto;
+}
+/* Conversation pieces: over the chat pane, under anything WhatsApp opens on top of it. */
+#wm-root > * {
+  z-index: 150;
+}
+/* Contact-list pieces: over the list pane, under WhatsApp's drawers and menus. */
+#wm-root > :is(#wm-profile, #wm-side-footer, #wm-side-tools, #wm-login) {
+  z-index: 250;
+}
+/* The display pictures are decoration: clicks go to whatever WhatsApp has there. */
+#wm-root > :is(#wm-pic-contact, #wm-pic-own) {
+  pointer-events: none;
 }
 #wm-root svg {
   display: block;
@@ -70,6 +85,15 @@ html:not([data-skin]) {
 }
 #wm-bar.wm-off button:hover {
   opacity: 1;
+}
+
+/*
+   A font picked from the toolbar dresses your own text: what you type and what you sent.
+   It exists only on this screen. With the default font none of this applies.
+*/
+html[data-skin][data-wm-font] #app #main :is([data-wm-msg='out'] :is([data-testid='selectable-text'], .selectable-text), footer [contenteditable='true']),
+html[data-skin][data-wm-font] #app #main :is([data-wm-msg='out'] :is([data-testid='selectable-text'], .selectable-text), footer [contenteditable='true']) :is(span, p, strong, em, a, div) {
+  font-family: var(--wm-chat-font), Tahoma, 'Segoe UI', Verdana, 'DejaVu Sans', sans-serif !important;
 }
 
 /* Reserve space for the toolbar above the composer. */

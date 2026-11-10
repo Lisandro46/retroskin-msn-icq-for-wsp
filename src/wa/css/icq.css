@@ -11,7 +11,7 @@ html[data-skin='icq'] {
 html[data-skin='icq'] [data-wm-hide] {
   display: none !important;
 }
-html[data-skin='icq'] #app :is(div, span, p, input, button, li, strong, em, h1, h2, h3, a, ol, label) {
+html[data-skin='icq'] #app :is(div, span, p, input, button, li, strong, em, h1, h2, h3, a, ol, label):not(#wm-root *) {
   font-family: 'Microsoft Sans Serif', 'MS Sans Serif', Tahoma, Verdana, 'DejaVu Sans', sans-serif !important;
 }
 
@@ -279,7 +279,7 @@ html[data-skin='icq'] [data-wm-msg] [data-testid='msg-container'] > div {
 html[data-skin='icq'] [data-wm-msg] [data-testid='msg-container'] {
   max-width: 100% !important;
 }
-html[data-skin='icq'] [data-wm-msg] [data-testid='selectable-text'] {
+html[data-skin='icq'] [data-wm-msg] :is([data-testid='selectable-text'], .selectable-text) {
   color: #000 !important;
 }
 html[data-skin='icq'] [data-wm-msg] [data-testid='msg-meta'] {
@@ -304,7 +304,7 @@ html[data-skin='icq'] [data-wm-msg] [data-testid='author'] {
   color: #c00000 !important;
   font-weight: bold !important;
 }
-html[data-skin='icq'] [data-wm-system] * {
+html[data-skin='icq'] [data-wm-system]:not(:has([data-testid='msg-container'])) * {
   background: transparent !important;
   box-shadow: none !important;
   color: #808080 !important;

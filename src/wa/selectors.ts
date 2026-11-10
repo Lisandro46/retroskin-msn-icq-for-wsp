@@ -13,6 +13,8 @@ export const SEL = {
   downloadCard: '[data-testid="download-native-client-button"]',
   loginBranding: ['[data-testid="wa-logo"]', '[data-testid="wa-wordmark"]'],
 
+  /** Its parent holds WhatsApp's layers: panes, drawers, menus, media viewer, dialogs. */
+  mainScreen: '[data-testid="wa-web-main-screen"]',
   side: '#side',
   chatList: '#pane-side',
   listRows: '#pane-side [role="row"]',

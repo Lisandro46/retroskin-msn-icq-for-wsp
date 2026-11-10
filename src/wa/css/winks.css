@@ -1,0 +1,97 @@
+/* Winks: one big emoji played over the open conversation, then gone. Never interactive. */
+#wm-root > #wm-wink {
+  position: fixed;
+  left: var(--wm-main-left);
+  top: var(--wm-main-top);
+  width: var(--wm-main-width);
+  height: calc(var(--wm-main-bottom) - var(--wm-main-top));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  animation: wm-wink-stage 2.8s linear both;
+}
+#wm-wink > span {
+  font: 220px/1 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.28));
+  transform-origin: 50% 60%;
+  animation: wm-wink-pop 2.8s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+html[data-wm-compact='1'] #wm-wink > span { font-size: 150px; }
+
+#wm-wink[data-anim='kiss'] > span { animation-name: wm-wink-kiss; }
+#wm-wink[data-anim='beat'] > span { animation-name: wm-wink-beat; animation-timing-function: ease-in-out; }
+#wm-wink[data-anim='laugh'] > span { animation-name: wm-wink-laugh; animation-timing-function: ease-in-out; }
+#wm-wink[data-anim='bloom'] > span { animation-name: wm-wink-bloom; transform-origin: 50% 100%; }
+#wm-wink[data-anim='break'] > span { animation-name: wm-wink-break; animation-timing-function: ease-in; }
+#wm-wink[data-anim='cry'] > span { animation-name: wm-wink-cry; animation-timing-function: ease-in-out; }
+#wm-wink[data-anim='flame'] > span { animation-name: wm-wink-flame; transform-origin: 50% 100%; animation-timing-function: ease-in-out; }
+
+@keyframes wm-wink-stage {
+  0% { opacity: 0; }
+  8%, 82% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes wm-wink-pop {
+  0% { transform: scale(0) rotate(-25deg); }
+  18% { transform: scale(1.25) rotate(8deg); }
+  30% { transform: scale(0.95) rotate(-4deg); }
+  42%, 80% { transform: scale(1) rotate(0); }
+  100% { transform: scale(1.15) rotate(0); }
+}
+/* A kiss flies at the screen, smacks twice and drifts up. */
+@keyframes wm-wink-kiss {
+  0% { transform: scale(0.1) rotate(-20deg); }
+  22% { transform: scale(1.35) rotate(-8deg); }
+  32% { transform: scale(1) rotate(-8deg); }
+  44% { transform: scale(1.3) rotate(-4deg); }
+  56%, 78% { transform: scale(1.05) rotate(-6deg); }
+  100% { transform: scale(1.5) rotate(-6deg) translateY(-12%); }
+}
+@keyframes wm-wink-beat {
+  0% { transform: scale(0); }
+  12% { transform: scale(1); }
+  22%, 46%, 70% { transform: scale(1.28); }
+  34%, 58%, 82% { transform: scale(1); }
+  100% { transform: scale(1.4); }
+}
+@keyframes wm-wink-laugh {
+  0% { transform: scale(0); }
+  12% { transform: scale(1.1) rotate(0); }
+  20%, 36%, 52%, 68% { transform: scale(1.1) rotate(-13deg) translateY(-4%); }
+  28%, 44%, 60%, 76% { transform: scale(1.1) rotate(13deg) translateY(4%); }
+  100% { transform: scale(1.1) rotate(0); }
+}
+@keyframes wm-wink-bloom {
+  0% { transform: translateY(60%) scale(0.2) rotate(-30deg); }
+  35% { transform: translateY(0) scale(1.1) rotate(6deg); }
+  55% { transform: scale(1) rotate(-5deg); }
+  75% { transform: scale(1) rotate(4deg); }
+  100% { transform: scale(1.05) rotate(0); }
+}
+@keyframes wm-wink-break {
+  0% { transform: translateY(-70%) scale(0.6); }
+  22% { transform: translateY(0) scale(1.1); }
+  28%, 40%, 52% { transform: translateX(-3%) rotate(-5deg); }
+  34%, 46%, 58% { transform: translateX(3%) rotate(5deg); }
+  70% { transform: translateY(0) rotate(0); }
+  100% { transform: translateY(45%) rotate(14deg) scale(0.9); }
+}
+@keyframes wm-wink-cry {
+  0% { transform: scale(0); }
+  14% { transform: scale(1.1); }
+  26%, 46%, 66% { transform: scale(1.1) translateY(5%); }
+  36%, 56%, 76% { transform: scale(1.1) translateY(-3%); }
+  100% { transform: scale(1.1) translateY(12%); }
+}
+@keyframes wm-wink-flame {
+  0% { transform: scale(0.2, 0); }
+  18% { transform: scale(1, 1.2); }
+  30%, 54%, 78% { transform: scale(1.08, 0.94) skewX(-5deg); }
+  42%, 66% { transform: scale(0.94, 1.1) skewX(5deg); }
+  100% { transform: scale(1.1, 1.3); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #wm-root > #wm-wink { display: none; }
+}

@@ -14,7 +14,9 @@ import {
   type MenuItemConstructorOptions
 } from 'electron'
 import type { MenuId, Rect, Settings, SkinId, SoundId, WaState } from '@shared/types'
-import { ICQ_STATUS_LABEL, MSN_STATUS_LABEL, type IcqStatus, type MsnStatus } from '@shared/types'
+import { CHAT_FONTS, ICQ_STATUS_LABEL, MSN_STATUS_LABEL, type ChatFont, type IcqStatus, type MsnStatus } from '@shared/types'
+import { WINKS } from '@shared/winks'
+import winksCss from '@wa/css/winks.css?raw'
 import baseCss from '@wa/css/base.css?raw'
 import chromeCss from '@wa/css/chrome.css?raw'
 import msnCss from '@wa/css/msn.css?raw'
@@ -110,7 +112,7 @@ function createWhatsAppView(window: BrowserWindow): WebContentsView {
   contents.session.setUserAgent(CHROME_UA)
 
   const injectCss = (): void => {
-    void contents.insertCSS(`${iconCssVars()}\n${baseCss}\n${chromeCss}\n${msnCss}\n${icqCss}`)
+    void contents.insertCSS(`${iconCssVars()}\n${baseCss}\n${chromeCss}\n${msnCss}\n${icqCss}\n${winksCss}`)
     applyZoom()
   }
   contents.on('dom-ready', injectCss)
@@ -205,10 +207,13 @@ function registerSidebarEvents(): void {
   })
   ipcMain.on('wa:menu', (event, request: { menu: MenuId; x: number; y: number }) => {
     if (event.sender !== wa?.webContents || !request) return
-    if (!['status', 'tools', 'icq-main', 'icq-services'].includes(request.menu)) return
+    if (!['status', 'tools', 'icq-main', 'icq-services', 'font', 'winks'].includes(request.menu)) return
     if (!Number.isFinite(request.x) || !Number.isFinite(request.y)) return
     const zoom = wa!.webContents.getZoomFactor()
     popup(request.menu, contentRect.x + request.x * zoom, contentRect.y + request.y * zoom)
+  })
+  ipcMain.on('wa:open-options', (event) => {
+    if (event.sender === wa?.webContents) sendShell('dialog', 'options')
   })
 }
 
@@ -272,8 +277,26 @@ function toggleItems(spanish: boolean): MenuItemConstructorOptions[] {
     { label: spanish ? 'Sonidos' : 'Sounds', type: 'checkbox', checked: s.sounds, click: () => updateSettings({ sounds: !s.sounds }) },
     { label: spanish ? 'Sacudir la ventana con los zumbidos' : 'Shake window on Zumbido', type: 'checkbox', checked: s.shake, click: () => updateSettings({ shake: !s.shake }) },
     { label: spanish ? 'Avisos emergentes' : 'Pop-up alerts', type: 'checkbox', checked: s.toasts, click: () => updateSettings({ toasts: !s.toasts }) },
+    { label: spanish ? 'Guiños animados' : 'Animated winks', type: 'checkbox', checked: s.winks, click: () => updateSettings({ winks: !s.winks }) },
     { label: spanish ? 'Siempre visible' : 'Always on top', type: 'checkbox', checked: s.alwaysOnTop, click: () => updateSettings({ alwaysOnTop: !s.alwaysOnTop }) }
   ]
+}
+
+/** Picking a wink types its emoji in the open conversation and sends it, like the nudge does. */
+const winkItems = (spanish: boolean): MenuItemConstructorOptions[] =>
+  WINKS.map((wink) => ({
+    label: `${wink.emoji}  ${spanish ? wink.label : wink.labelEn}`,
+    click: () => sendWa('wa:send-wink', wink.id)
+  }))
+
+function fontItems(spanish: boolean): MenuItemConstructorOptions[] {
+  const current = settings().chatFont
+  return (Object.keys(CHAT_FONTS) as ChatFont[]).map((font) => ({
+    label: spanish ? CHAT_FONTS[font].label : CHAT_FONTS[font].labelEn,
+    type: 'radio',
+    checked: current === font,
+    click: () => updateSettings({ chatFont: font })
+  }))
 }
 
 const openSounds = (): void => void shell.openPath(ensureSoundsDir())
@@ -292,7 +315,14 @@ function buildMenu(id: MenuId): MenuItemConstructorOptions[] {
     case 'contacts':
       return [{ label: 'Buscar un contacto…', accelerator: 'Ctrl+F', click: () => sendWa('wa:focus-search') }]
     case 'actions':
-      return [{ label: 'Enviar un zumbido', accelerator: 'Ctrl+G', click: () => sendWa('wa:send-nudge') }]
+      return [
+        { label: 'Enviar un zumbido', accelerator: 'Ctrl+G', click: () => sendWa('wa:send-nudge') },
+        { label: 'Enviar un guiño', submenu: winkItems(true) }
+      ]
+    case 'font':
+      return fontItems(s.skin !== 'icq')
+    case 'winks':
+      return winkItems(s.skin !== 'icq')
     case 'tools':
       return [
         { label: 'Skin', submenu: skinItems() },
@@ -325,7 +355,9 @@ function buildMenu(id: MenuId): MenuItemConstructorOptions[] {
     case 'icq-services':
       return [
         { label: 'Find/Add Users', accelerator: 'Ctrl+F', click: () => sendWa('wa:focus-search') },
-        { label: 'Send Zumbido!', accelerator: 'Ctrl+G', click: () => sendWa('wa:send-nudge') }
+        { label: 'Send Zumbido!', accelerator: 'Ctrl+G', click: () => sendWa('wa:send-nudge') },
+        { label: 'Send Wink', submenu: winkItems(false) },
+        { label: 'My Font', submenu: fontItems(false) }
       ]
     case 'skin':
       return skinItems()

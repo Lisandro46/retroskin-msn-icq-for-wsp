@@ -5,6 +5,18 @@ export type IcqStatus = 'online' | 'ffc' | 'away' | 'na' | 'occupied' | 'dnd' | 
 
 export type SoundId = 'message' | 'nudge' | 'online'
 
+/** Fonts for your own text. Like the rest, a local decoration: WhatsApp cannot carry a font. */
+export const CHAT_FONTS = {
+  default: { label: 'Predeterminada', labelEn: 'Default', family: '' },
+  tahoma: { label: 'Tahoma', labelEn: 'Tahoma', family: 'Tahoma' },
+  arial: { label: 'Arial', labelEn: 'Arial', family: 'Arial' },
+  verdana: { label: 'Verdana', labelEn: 'Verdana', family: 'Verdana' },
+  comic: { label: 'Comic Sans MS', labelEn: 'Comic Sans MS', family: "'Comic Sans MS'" },
+  times: { label: 'Times New Roman', labelEn: 'Times New Roman', family: "'Times New Roman'" },
+  courier: { label: 'Courier New', labelEn: 'Courier New', family: "'Courier New'" }
+} as const
+export type ChatFont = keyof typeof CHAT_FONTS
+
 /** Everything here is local decoration: none of it reaches WhatsApp. */
 export interface Settings {
   skin: SkinId
@@ -17,6 +29,9 @@ export interface Settings {
   shake: boolean
   toasts: boolean
   alwaysOnTop: boolean
+  /** Play single-emoji messages as big winks over the conversation. */
+  winks: boolean
+  chatFont: ChatFont
 }
 
 /** What the WhatsApp page looks like right now. */
@@ -29,7 +44,7 @@ export interface Rect {
   height: number
 }
 
-export type MenuId = 'file' | 'contacts' | 'actions' | 'tools' | 'help' | 'status' | 'icq-main' | 'icq-services' | 'skin'
+export type MenuId = 'file' | 'contacts' | 'actions' | 'tools' | 'help' | 'status' | 'icq-main' | 'icq-services' | 'skin' | 'font' | 'winks'
 
 export interface ToastData {
   skin: SkinId

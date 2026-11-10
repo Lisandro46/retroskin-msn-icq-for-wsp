@@ -5,8 +5,9 @@
  * types *ZUMBIDO* in the composer and presses send.
  */
 import { ipcRenderer } from 'electron'
-import { NUDGE_TEXT, type Settings, type SkinId, type WaState } from '@shared/types'
-import { icqFlower, msnLogo, nudgeIcon, samplePicture, smileyIcon, svgUrl } from '@shared/icons'
+import { CHAT_FONTS, NUDGE_TEXT, type Settings, type SkinId, type WaState } from '@shared/types'
+import { WINKS, winkFor, type Wink } from '@shared/winks'
+import { icqFlower, msnLogo, nudgeIcon, samplePicture, smileyIcon, svgUrl, winkIcon } from '@shared/icons'
 import { sidebarProfile, sidebarFooter, sidebarTools } from '@shared/sidebar'
 import { buttonWithIcon, first, hasIcon, ICON, ONLINE_RE, PRE_PLAIN_RE, SEL, TYPING_RE } from '@wa/selectors'
 
@@ -26,6 +27,7 @@ ipcRenderer.on('wa:settings', (_event, next: Settings) => {
   tick()
 })
 ipcRenderer.on('wa:send-nudge', () => void sendNudge())
+ipcRenderer.on('wa:send-wink', (_event, id: string) => void sendWink(id))
 ipcRenderer.on('wa:focus-search', () => focusSearch())
 
 function applySkin(): void {
@@ -35,6 +37,16 @@ function applySkin(): void {
   if (root.dataset.skin !== value) {
     if (value) root.dataset.skin = value
     else delete root.dataset.skin
+  }
+  // The chosen font is local decoration: without one, no font rule of ours applies at all.
+  const font = settings?.chatFont
+  const family = value && font && font !== 'default' && Object.hasOwn(CHAT_FONTS, font) ? CHAT_FONTS[font].family : ''
+  if (family) {
+    if (root.dataset.wmFont !== font) root.dataset.wmFont = font
+    if (root.style.getPropertyValue('--wm-chat-font') !== family) root.style.setProperty('--wm-chat-font', family)
+  } else if (root.dataset.wmFont) {
+    delete root.dataset.wmFont
+    root.style.removeProperty('--wm-chat-font')
   }
 }
 
@@ -51,6 +63,14 @@ let observedLayout: Element[] = []
 const part = <T extends HTMLElement = HTMLElement>(id: string): T | null =>
   overlay?.querySelector<T>(`#${id}`) ?? null
 
+/**
+ * WhatsApp keeps its panes, drawers, menus, media viewer and dialogs as layers of one
+ * container. The overlay is mounted there too, so those layers cover it natively
+ * instead of the skin guessing when to hide. Before login that container does not exist.
+ */
+const overlayHost = (): HTMLElement =>
+  document.querySelector<HTMLElement>(SEL.mainScreen)?.parentElement ?? document.body
+
 function buildOverlay(): void {
   if (!document.body) return
   overlay?.remove()
@@ -66,9 +86,10 @@ function buildOverlay(): void {
         <div><b>Iniciar sesión</b><span>Escaneá el código con WhatsApp en tu teléfono para iniciar sesión en Messenger.</span></div></div>
       <div id="wm-status"></div>
       <div id="wm-bar">
-        <button id="wm-font" title="Cambiar la fuente"><b>A</b> Fuente</button>
+        <button id="wm-font" data-wm-menu="font" title="Cambiar la fuente"><b>A</b> Fuente</button>
         <button id="wm-emoji" title="Emoticonos">${smileyIcon(16)}<span class="wm-caret">▾</span></button>
         <button id="wm-nudge" title="Enviar un zumbido (Ctrl+G)">${nudgeIcon(16)} Zumbido</button>
+        <button id="wm-winks" data-wm-menu="winks" title="Enviar un guiño">${winkIcon(16)} Guiños</button>
         <span class="wm-grow"></span>
         <button id="wm-send" title="Enviar (Enter)">Enviar</button>
       </div>
@@ -83,7 +104,7 @@ function buildOverlay(): void {
       </div>`
   }
   if (s !== 'off') overlay.insertAdjacentHTML('afterbegin', `<section id="wm-profile"></section><footer id="wm-side-footer"></footer><div id="wm-chat-title"></div>${s === 'icq' ? `<nav id="wm-side-tools" aria-label="ICQuick">${sidebarTools()}</nav>` : ''}`)
-  document.body.appendChild(overlay)
+  overlayHost().appendChild(overlay)
   bindSidebar()
   syncSidebar()
   // Toolbar buttons must not steal focus from WhatsApp's composer.
@@ -92,7 +113,6 @@ function buildOverlay(): void {
   })
   part('wm-nudge')?.addEventListener('click', () => void sendNudge())
   part('wm-emoji')?.addEventListener('click', () => buttonWithIcon(document.querySelector(SEL.footer), ICON.emoji)?.click())
-  part('wm-font')?.addEventListener('click', () => notice('Las fuentes de Messenger no viajan por WhatsApp :)'))
   part('wm-send')?.addEventListener('click', () => pressSend())
   lastPics = { contact: '', own: '' }
 }
@@ -138,6 +158,7 @@ function bindSidebar(): void {
   overlay?.addEventListener('click', (event) => {
     const target = event.target as HTMLElement
     if (target.closest('[data-wm-action="search"]')) return focusSearch()
+    if (target.closest('[data-wm-action="options"]')) return ipcRenderer.send('wa:open-options')
     const button = target.closest<HTMLElement>('[data-wm-menu]')
     if (!button) return
     const r = button.getBoundingClientRect()
@@ -262,10 +283,16 @@ function markMessages(chatName: string): void {
     if (!bubble) {
       // Date separators and system notices break the "X dice:" grouping.
       setData(row, 'wmSystem', '1')
+      // WhatsApp recycles rows: one that held a message must not keep its marks.
+      for (const marked of [row, ...row.querySelectorAll<HTMLElement>('[data-wm-msg]')]) {
+        for (const key of ['wmMsg', 'wmSender', 'wmTime', 'wmFirst', 'wmNudge']) delete marked.dataset[key]
+      }
       previous = ''
       previousDir = undefined
       return
     }
+    // ...and one first seen before its bubble loaded must not stay greyed out as a notice.
+    if (row.dataset.wmSystem) delete row.dataset.wmSystem
     const wrapper = row.querySelector<HTMLElement>(SEL.messageWrapper) ?? row
     const pre = bubble.querySelector(SEL.prePlainText)?.getAttribute('data-pre-plain-text') ?? ''
     const parsed = PRE_PLAIN_RE.exec(pre)
@@ -296,7 +323,10 @@ function markMessages(chatName: string): void {
     const id = wrapper.getAttribute('data-id') ?? `${chatName}#${index}#${pre}`
     if (seenIds.has(id)) return
     seenIds.add(id)
-    if (seeding || out || index < rows.length - 3 || !isFresh(time)) return
+    if (seeding || index < rows.length - 3 || !isFresh(time)) return
+    const wink = nudge ? undefined : winkFor(plainText(text ?? bubble))
+    if (wink) playWink(wink)
+    if (out) return
     if (nudge) ipcRenderer.send('wa:nudge-received', { name: sender })
     else if (!document.hasFocus()) {
       ipcRenderer.send('wa:incoming', { name: sender, preview: (text?.textContent ?? '').trim().slice(0, 120), openChat: true })
@@ -394,6 +424,51 @@ function watchChatList(): void {
   }
   unreadByChat = next
   listSeeded = true
+}
+
+/* ------------------------------------------------------------------- winks */
+
+/** Message text with emoji restored: WhatsApp draws them as images carrying the character. */
+function plainText(node: Node): string {
+  if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? ''
+  if (!(node instanceof HTMLElement)) return ''
+  if (node.matches(SEL.messageMeta) || node.matches(SEL.author)) return ''
+  if (node instanceof HTMLImageElement) return node.dataset.plainText ?? node.alt
+  if (!node.childNodes.length) return node.dataset.plainText ?? ''
+  return [...node.childNodes].map(plainText).join('')
+}
+
+/** A message that is just one of the wink emoji plays big over the conversation, like MSN 7's winks. */
+function playWink(wink: Wink): void {
+  if (!overlay || !settings?.winks || skin() === 'off') return
+  part('wm-wink')?.remove()
+  const stage = document.createElement('div')
+  stage.id = 'wm-wink'
+  stage.dataset.anim = wink.anim
+  stage.setAttribute('aria-hidden', 'true')
+  const glyph = document.createElement('span')
+  glyph.textContent = wink.emoji
+  stage.appendChild(glyph)
+  overlay.appendChild(stage)
+  setTimeout(() => stage.remove(), 3000)
+}
+
+let lastWink = 0
+async function sendWink(id: string): Promise<void> {
+  const wink = WINKS.find((w) => w.id === id)
+  if (!wink) return
+  const english = skin() === 'icq'
+  const box = composer()
+  if (!box) return notice(english ? 'Open a conversation to send a wink.' : 'Abrí una conversación para enviar un guiño.')
+  if (Date.now() - lastWink < 2000) return
+  if ((box.textContent ?? '').trim() || box.querySelector('img')) {
+    return notice(english ? 'Send or clear what you are typing first.' : 'Enviá o borrá lo que estás escribiendo antes del guiño.')
+  }
+  lastWink = Date.now()
+  box.focus()
+  document.execCommand('insertText', false, wink.emoji)
+  await wait(150)
+  pressSend()
 }
 
 /* ------------------------------------------------------------------- nudge */
@@ -518,6 +593,8 @@ function tick(): void {
   if (!document.body) return
   applySkin()
   if (!overlay || !overlay.isConnected) buildOverlay()
+  const host = overlayHost()
+  if (overlay && overlay.parentElement !== host && !overlay.contains(document.activeElement)) host.appendChild(overlay)
   const next = detectState()
   if (next !== state) {
     state = next
