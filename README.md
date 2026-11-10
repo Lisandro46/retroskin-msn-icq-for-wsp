@@ -92,8 +92,6 @@ Si ponés ahí `msn/message.wav`, `msn/nudge.wav`, `msn/online.wav`, `icq/messag
 
 El nick, el mensaje personal, el estado y el ICQ# son decorativos: se guardan en tu computadora y **no cambian nada en WhatsApp**.
 
-**Fuente** (o **Herramientas → Fuente local**) cambia la tipografía de los mensajes y del editor solo en esta app. La preferencia queda guardada; la otra persona sigue viendo la fuente de su WhatsApp. En ICQ está en **Main → Preferences → Local font**. El banner al pie de MSN es decorativo y no contiene enlaces.
-
 ## Desarrollo
 
 ```bash
@@ -101,7 +99,6 @@ npm install
 npm run dev        # app en modo desarrollo
 npm run preview:retro  # revisión visual local con datos ficticios, puerto 4173
 npm run typecheck
-npm run test:retro # regresiones de interfaz en Electron con datos ficticios
 npm run dist:win   # instalador y portable en dist/ (también: npm run dist)
 npm run dist:mac   # .dmg y .zip (solo desde una Mac)
 npm run dist:linux # AppImage, .deb y .rpm (desde Linux; .rpm necesita rpmbuild)
@@ -120,8 +117,6 @@ Para publicar una versión: `git tag v0.2.0 && git push origin v0.2.0` y GitHub 
 - `src/wa/css` — las skins aplicadas sobre WhatsApp.
 
 La vista de prueba usa las plantillas, estilos y preload reales sobre un DOM sintético. No se conecta a WhatsApp ni prueba la compatibilidad con su DOM actual. Ver [registro de la primera etapa](docs/ETAPA_1_FIDELIDAD.md) y [plan completo](docs/PLAN_FIDELIDAD_RETRO.md).
-
-`test:retro` comprueba superposición de diálogos, menús y visores, selección para reenvío, restauración de controles, mensajes que cargan tarde, fuentes locales y ancho compacto en las tres skins. Guarda capturas con datos ficticios en `output/issue-1/`. En Linux requiere una sesión gráfica (o `xvfb-run -a npm run test:retro`). Antes de publicar, validar también en WhatsApp vinculado: abrir y ampliar una imagen, usar su barra superior, abrir menús, seleccionar y reenviar mensajes, y comprobar el historial al desplazarse.
 
 ## Licencia
 

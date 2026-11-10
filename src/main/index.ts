@@ -14,7 +14,7 @@ import {
   type MenuItemConstructorOptions
 } from 'electron'
 import type { MenuId, Rect, Settings, SkinId, SoundId, WaState } from '@shared/types'
-import { CHAT_FONTS, ICQ_STATUS_LABEL, MSN_STATUS_LABEL, type ChatFont, type IcqStatus, type MsnStatus } from '@shared/types'
+import { ICQ_STATUS_LABEL, MSN_STATUS_LABEL, type IcqStatus, type MsnStatus } from '@shared/types'
 import baseCss from '@wa/css/base.css?raw'
 import chromeCss from '@wa/css/chrome.css?raw'
 import msnCss from '@wa/css/msn.css?raw'
@@ -205,7 +205,7 @@ function registerSidebarEvents(): void {
   })
   ipcMain.on('wa:menu', (event, request: { menu: MenuId; x: number; y: number }) => {
     if (event.sender !== wa?.webContents || !request) return
-    if (!['status', 'tools', 'icq-main', 'icq-services', 'font'].includes(request.menu)) return
+    if (!['status', 'tools', 'icq-main', 'icq-services'].includes(request.menu)) return
     if (!Number.isFinite(request.x) || !Number.isFinite(request.y)) return
     const zoom = wa!.webContents.getZoomFactor()
     popup(request.menu, contentRect.x + request.x * zoom, contentRect.y + request.y * zoom)
@@ -296,7 +296,6 @@ function buildMenu(id: MenuId): MenuItemConstructorOptions[] {
     case 'tools':
       return [
         { label: 'Skin', submenu: skinItems() },
-        { label: 'Fuente local', submenu: buildMenu('font') },
         { type: 'separator' },
         ...toggleItems(true),
         { type: 'separator' },
@@ -312,20 +311,10 @@ function buildMenu(id: MenuId): MenuItemConstructorOptions[] {
         checked: s.msnStatus === status,
         click: () => updateSettings({ msnStatus: status })
       }))
-    case 'font':
-      return [
-        { label: 'Solo en esta app; no se envía por WhatsApp', enabled: false },
-        { type: 'separator' },
-        ...(Object.keys(CHAT_FONTS) as ChatFont[]).map(chatFont => ({
-          label: CHAT_FONTS[chatFont], type: 'radio' as const,
-          checked: (s.chatFont ?? 'default') === chatFont,
-          click: () => updateSettings({ chatFont })
-        }))
-      ]
     case 'icq-main':
       return [
         { label: 'Change Skin', submenu: skinItems() },
-        { label: 'Preferences', submenu: [...toggleItems(false), { label: 'Local font', submenu: buildMenu('font') }, { type: 'separator' }, { label: 'Sounds folder…', click: openSounds }] },
+        { label: 'Preferences', submenu: [...toggleItems(false), { type: 'separator' }, { label: 'Sounds folder…', click: openSounds }] },
         { label: 'My Details (Nick / ICQ#)…', click: () => sendShell('dialog', 'options') },
         { type: 'separator' },
         { label: 'Reload', click: reloadWa },

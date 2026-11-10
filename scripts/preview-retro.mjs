@@ -7,7 +7,6 @@
 import http from 'node:http'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
 
 const root = path.resolve(import.meta.dirname, '..')
@@ -23,8 +22,7 @@ const settings = {
   sounds: false,
   shake: false,
   toasts: false,
-  alwaysOnTop: false,
-  chatFont: 'default'
+  alwaysOnTop: false
 }
 
 /* ------------------------------------------------- stand-in for 'electron' */
@@ -51,10 +49,6 @@ window.addEventListener('message', (e) => {
   if (e.origin !== location.origin) return
   if (e.data.skin) {
     settings = { ...settings, skin: e.data.skin }
-    emit()
-  }
-  if (e.data.chatFont) {
-    settings = { ...settings, chatFont: e.data.chatFont }
     emit()
   }
   if (e.data.action === 'chat') {
@@ -324,7 +318,7 @@ const pages = {
   '/avatar.svg': ['image/svg+xml', avatarSvg]
 }
 
-export const createPreviewServer = () => http.createServer(async (req, res) => {
+const server = http.createServer(async (req, res) => {
   try {
     const route = new URL(req.url, 'http://localhost').pathname
     res.setHeader('Cache-Control', 'no-store')
@@ -343,15 +337,12 @@ export const createPreviewServer = () => http.createServer(async (req, res) => {
   }
 })
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const server = createPreviewServer()
-  server.on('error', (error) => {
-    if (error.code === 'EADDRINUSE') {
-      console.error(`El puerto ${PORT} ya está en uso: probablemente la vista de prueba ya está abierta en http://127.0.0.1:${PORT}`)
-      process.exit(1)
-    }
-    throw error
-  })
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`El puerto ${PORT} ya está en uso: probablemente la vista de prueba ya está abierta en http://127.0.0.1:${PORT}`)
+    process.exit(1)
+  }
+  throw error
+})
 
-  server.listen(PORT, '127.0.0.1', () => console.log(`Retro preview: http://127.0.0.1:${PORT} — datos ficticios`))
-}
+server.listen(PORT, '127.0.0.1', () => console.log(`Retro preview: http://127.0.0.1:${PORT} — datos ficticios`))

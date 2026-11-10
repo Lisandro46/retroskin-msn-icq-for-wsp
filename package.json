@@ -1,6 +1,6 @@
 {
   "name": "retro-messenger-whatsapp",
-  "version": "0.2.2",
+  "version": "0.2.1",
   "description": "WhatsApp Web vestido de MSN Messenger 7.5 o ICQ 2000b (solo estético)",
   "main": "out/main/index.js",
   "author": {
@@ -16,7 +16,6 @@
     "dev": "electron-vite dev",
     "build": "npm run typecheck && electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
-    "test:retro": "electron scripts/test-retro.mjs",
     "dist": "npm run dist:win",
     "dist:win": "npm run build && electron-builder --win --publish never",
     "dist:mac": "npm run build && electron-builder --mac --publish never",
