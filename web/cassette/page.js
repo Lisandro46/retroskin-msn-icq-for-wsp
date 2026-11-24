@@ -1,7 +1,8 @@
 (() => {
   const equipment = {
     deck: { file: 'deck.png', alt: 'Interfaz de Retro Cassette con el deck 3D, estante de cassettes y librito abierto sobre la mesa. Biblioteca de demostración.' },
-    portable: { file: 'portable.png', alt: 'Interfaz de Retro Cassette con el portátil azul en 3D, estante de cassettes y librito abierto. Biblioteca de demostración.' }
+    portable: { file: 'portable.png', alt: 'Interfaz de Retro Cassette con el portátil azul en 3D, estante de cassettes y librito abierto. Biblioteca de demostración.' },
+    vinilo: { file: 'vinilo.png', alt: 'Interfaz de Retro Cassette con el tocadiscos plateado en 3D, un disco girando y el cajón de discos. Biblioteca de demostración.' }
   };
   const image = document.getElementById('equipment-image');
   document.querySelectorAll('[data-equipment]').forEach(button => {
