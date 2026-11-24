@@ -1,7 +1,8 @@
 (() => {
   const equipment = {
     deck: { file: 'deck.png', alt: 'Interfaz de Retro Cassette con el deck 3D, estante de cassettes y librito abierto sobre la mesa. Biblioteca de demostración.' },
-    portable: { file: 'portable.png', alt: 'Interfaz de Retro Cassette con el portátil azul en 3D, estante de cassettes y librito abierto. Biblioteca de demostración.' }
+    portable: { file: 'portable.png', alt: 'Interfaz de Retro Cassette con el portátil azul en 3D, estante de cassettes y librito abierto. Biblioteca de demostración.' },
+    vinilo: { file: 'vinilo.png', alt: 'Interfaz de Retro Cassette con el tocadiscos plateado en 3D, un disco girando y el cajón de discos. Biblioteca de demostración.' }
   };
   const image = document.getElementById('equipment-image');
   document.querySelectorAll('[data-equipment]').forEach(button => {
@@ -41,6 +42,7 @@
   const isMobile = /android|iphone|ipad|ipod/.test(ua) || (platform.includes('mac') && navigator.maxTouchPoints > 1);
   const isMac = !isMobile && platform.includes('mac');
   const isWindows = platform.includes('win');
+  const isLinux = !isMobile && platform.includes('linux');
   const main = document.getElementById('main-download');
   const note = document.getElementById('platform-note');
   if (isMac) {
@@ -48,10 +50,15 @@
     main.textContent = '↓ Descargar para Mac';
     selectTab(document.getElementById('tab-mac'));
     note.textContent = 'Mac en prueba · Apple Silicon e Intel · También para Windows';
+  } else if (isLinux) {
+    main.href = '#descargas';
+    main.textContent = '↓ Descargar para Linux';
+    selectTab(document.getElementById('tab-linux'));
+    note.textContent = 'Linux en prueba · AppImage y .deb · También para Windows y Mac';
   } else if (isMobile || !isWindows) {
     main.href = '#descargas';
     main.textContent = 'Ver descargas para computadora';
-    note.textContent = 'Para Windows y Mac (en prueba). No hay versión para celular ni Linux.';
+    note.textContent = 'Para Windows, Mac y Linux (en prueba). No hay versión para celular.';
   }
   // Only an optional version label depends on GitHub. Downloads work without JavaScript.
   fetch('https://api.github.com/repos/Lisandro46/retro-cassette-descargas/releases/latest', { signal: AbortSignal.timeout(5000) })
