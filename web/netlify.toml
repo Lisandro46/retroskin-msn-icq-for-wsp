@@ -90,6 +90,16 @@
   status = 302
 
 [[redirects]]
+  from = "/cassette/linux"
+  to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-linux-x86_64.AppImage"
+  status = 302
+
+[[redirects]]
+  from = "/cassette/deb"
+  to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-linux-amd64.deb"
+  status = 302
+
+[[redirects]]
   from = "/cassette/mac-intel"
   to = "https://github.com/Lisandro46/retro-cassette-descargas/releases/latest/download/Retro-Cassette-mac-x64.dmg"
   status = 302
